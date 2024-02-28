@@ -1,0 +1,168 @@
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+[RequireComponent(typeof(CharacterController))]
+public class PlayerMovementController : PlayerInputControl
+{
+    [Header("References")]
+    [SerializeField] private Animator animator;
+    private CharacterController controller;
+    [SerializeField] private Character character;
+
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private float sprintSpeed = 5f;
+    [SerializeField] private float gravity = -9.8f;
+    [SerializeField] private float turnSmoothTime = 0.1f;
+
+    [Header("Animation")]
+    [SerializeField] private float transitionSpeed = 2f;
+
+    public static event Action OnPlayerMove;
+
+    private bool canMove = true;
+    private Vector3 rawInputMovement = Vector3.zero;
+    private Vector3 velocity;
+    private Vector3 moveDirection;
+    private Vector3 initialPosition;
+
+    // Movement Parameters
+    private float speed;
+    private float turnSmoothVelocity;
+    private bool isSprinting;
+
+    [Header("Modifiers")]
+    public float speedMultiplier = 1;
+
+    //private Character.Character character;
+
+    private void Awake()
+    {
+        controller = GetComponent<CharacterController>();
+        isSprinting = true;
+    }
+
+    protected override void Start()
+    {
+        initialPosition = transform.position;
+        speed = sprintSpeed;
+        character = GetComponent<Character>();
+        if (character != null)
+        {
+            character.OnCharacterStatsChanged += () =>
+            {
+                sprintSpeed = character.CheckStat(StatEnum.Speed) / StatsConst.MOV_SPEED_MOD;
+                moveSpeed = character.CheckStat(StatEnum.Speed) / StatsConst.MOV_SPEED_MOD * .4f;
+            };
+        }
+        base.Start();
+    }
+
+    private void Update()
+    {
+        canMove = animator.GetBool("CanMove");
+
+        if (canMove)
+            moveDirection = GetMovementInputDirection();
+        else
+            moveDirection = Vector3.zero;
+
+        speed = (isSprinting) ? sprintSpeed : moveSpeed;
+        velocity = new Vector3(moveDirection.x * speed * speedMultiplier, velocity.y, moveDirection.z * speed * speedMultiplier);
+
+        // Gravity
+        if (controller.isGrounded)
+        {
+            if (velocity.y < 0f)
+                velocity.y = -2f;
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+
+        CheckOutOfBound();
+
+        if(animator) animator.SetFloat("Movement", Mathf.MoveTowards(animator.GetFloat("Movement"), (speed == sprintSpeed ? 1f : 0.5f) * moveDirection.magnitude, Time.deltaTime * transitionSpeed));
+    }
+
+    #region Callbacks
+    protected override void RegisterInputCallbacks()
+    {
+        if (playerControls == null) return;
+
+        playerControls.Gameplay.Move.performed += OnMove;
+        playerControls.Gameplay.Move.canceled += OnMoveCanceled;
+        playerControls.Gameplay.Walk.performed += OnWalk;
+        playerControls.Gameplay.Walk.canceled += OnWalkCanceled;
+    }
+    protected override void UnregisterInputCallbacks()
+    {
+        if (playerControls == null) return;
+
+        playerControls.Gameplay.Move.performed -= OnMove;
+        playerControls.Gameplay.Move.canceled -= OnMoveCanceled;
+        playerControls.Gameplay.Walk.performed -= OnWalk;
+        playerControls.Gameplay.Walk.canceled -= OnWalkCanceled;
+    }
+    #endregion
+
+    #region Movement
+    // Return Vector3 Move Input Direction
+    private Vector3 GetMovementInputDirection()
+    {
+        if (rawInputMovement.magnitude > 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(rawInputMovement.x, rawInputMovement.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            if (OnPlayerMove != null)
+            {
+                OnPlayerMove.Invoke();
+            }
+
+            return moveDirection;
+        }
+
+        return Vector3.zero;
+    }
+    #endregion
+
+    #region Movement Handling
+    private void CheckOutOfBound()
+    {
+        if (transform.position.y < -5f)
+        {
+            velocity = Vector3.zero;
+            transform.position = initialPosition;
+        }
+    }
+    #endregion
+
+    #region Callback Functions
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 inputMovement = context.ReadValue<Vector2>();
+        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        rawInputMovement = Vector3.zero;
+    }
+
+    public void OnWalk(InputAction.CallbackContext context)
+    {
+        isSprinting = false;
+    }
+
+    public void OnWalkCanceled(InputAction.CallbackContext context)
+    {
+        isSprinting = true;
+    }
+    #endregion
+
+}
