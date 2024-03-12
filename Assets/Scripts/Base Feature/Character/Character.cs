@@ -15,6 +15,7 @@ public class Character : MonoBehaviour
     [Cinemachine.TagField]
     public List<string> EnemyTags = new();
 
+    public bool IsDead { get => isDead; }
     private bool isDead = false;
 
     #region Events
@@ -25,6 +26,8 @@ public class Character : MonoBehaviour
 
     public Action<Character> OnCharacterKill;
     #endregion
+
+    private CharacterLeveling charLevel;
 
     // Constructor
     private Character() { InitializeStats(); }
@@ -56,6 +59,7 @@ public class Character : MonoBehaviour
 
     public void ResetDynamicValue()
     {
+        isDead = false;
         foreach(var dynamicStat in DynamicStats)
         {
             dynamicStat.Value.ResetCurrentValue();
@@ -140,4 +144,25 @@ public class Character : MonoBehaviour
         ChangeDynamicValue(DynamicStatEnum.Mana, Stats[StatEnum.ManaRegen].Value);
     }
     #endregion
+
+    public string Describe(bool self = false)
+    {
+        Describable desc = GetComponentInChildren<Describable>();
+
+        if (desc == null) return null;
+
+        string description = $"Here are { (self ? "your" : desc.Name) } current stats:\n";
+
+        description += $"Health Point: {Mathf.Round(CheckStat(DynamicStatEnum.Health))}/{CheckStatMax(DynamicStatEnum.Health)}";
+
+        float percent = CheckStat(DynamicStatEnum.Health)/CheckStatMax(DynamicStatEnum.Health) * 100f;
+        string info = (percent < 5f) ? "Really Low" : (percent < 20f) ? "Low" : (percent < 50f) ? "Medium" : (percent < 90f) ? "High" : "Full";
+
+        description += " (" + info + " Health)";
+
+        if(charLevel != null)
+            description += $"Level: {charLevel.CurrentLevel}/100\n";
+
+        return description;
+    }
 }

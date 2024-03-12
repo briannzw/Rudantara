@@ -17,9 +17,9 @@ public static class StatsConst
 
     public const float NAV_SAMPLE_POS_MAX_DISTANCE = 5f;
 
-    public const float STOPPING_DISTANCE = 2f;
+    public const float STOPPING_DISTANCE = 1.5f;
 
     #region Exp
-    public const float KILL_EXP_MODIFIER = .2f;
+    public const float KILL_EXP_MODIFIER = .35f;
     #endregion
 }

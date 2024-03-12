@@ -10,9 +10,12 @@ public class EnemyCombatController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private Character character;
-    [SerializeField] private EnemyController controller;
+    [SerializeField] private AgentController controller;
+    [SerializeField] private HitController hitController;
+    private Describable describable;
 
     [Header("Normal Attack")]
+    [SerializeField] private string normalAttackDescribe = "Basic Hit";
     [SerializeField] private string normalAttackAnimTrigger;
 
     [Header("Skills")]
@@ -28,6 +31,8 @@ public class EnemyCombatController : MonoBehaviour
     private float normalTimer;
     private float skillTimer;
     private float leaveTimer;
+
+    private float wanderTime;
     private float wanderTimer;
 
     private int resistance;
@@ -39,18 +44,44 @@ public class EnemyCombatController : MonoBehaviour
     public Action OnReset;
     #endregion
 
+    private void OnEnable()
+    {
+        animator.SetBool("Dead", false);
+        agent.enabled = true;
+        GetComponent<Collider>().enabled = true;
+        controller.enabled = true;
+        controller.SetTarget(null);
+        Reset();
+    }
+
+    private void Reset()
+    {
+        origin = transform.position;
+
+        character.ResetDynamicValue();
+        skillTimer = StatsConst.SKILL_CHECK_INTERVAL;
+        normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);
+
+        foreach (var skill in Skills)
+        {
+            if(SkillCooldowns.ContainsKey(skill))
+                SkillCooldowns[skill] = 0f;
+        }
+
+        OnReset?.Invoke();
+    }
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         character = GetComponent<Character>();
-        controller = GetComponent<EnemyController>();
+        controller = GetComponent<AgentController>();
         agent = GetComponent<NavMeshAgent>();
+        if (!describable) describable = GetComponentInChildren<Describable>();
     }
 
     private void Start()
     {
-        origin = transform.position;
-
         // Reset Cooldowns for all Skills
         foreach(var skill in Skills)
         {
@@ -75,6 +106,7 @@ public class EnemyCombatController : MonoBehaviour
             {
                 animator.SetTrigger("Hurt");
                 resistance = StatsConst.HURT_RESISTANCE;
+                describable.OnEvent?.Invoke("[" + describable.Name + "] died and will be respawned.");
             }
         };
 
@@ -90,6 +122,7 @@ public class EnemyCombatController : MonoBehaviour
 
         // Reset to Default
         leaveTimer = resetAfterLeaving;
+        wanderTime = Random.Range(0.7f * StatsConst.WANDER_INTERVAL, 1.25f * StatsConst.WANDER_INTERVAL);
     }
 
     private void CastSkill()
@@ -117,7 +150,10 @@ public class EnemyCombatController : MonoBehaviour
             character.ChangeDynamicValue(DynamicStatEnum.Mana, -availableSkills[randomSkill].ManaRequired);
 
             // Set trigger
-            animator.SetTrigger(availableSkills[randomSkill].SkillAnimationTrigger);
+            animator.SetTrigger(availableSkills[randomSkill].Trigger);
+
+            // Set HitController Name
+            hitController.Name = availableSkills[randomSkill].Name;
         }
     }
 
@@ -132,7 +168,9 @@ public class EnemyCombatController : MonoBehaviour
             transform.position -= 1f * Time.deltaTime * Vector3.up;
             yield return null;
         }
-        Destroy(gameObject);
+
+        // Destroy(gameObject);
+        GetComponent<SpawnObject>().Release();
     }
 
     private void Update()
@@ -161,6 +199,7 @@ public class EnemyCombatController : MonoBehaviour
             normalTimer -= Time.deltaTime;
             if (normalTimer < 0f)
             {
+                hitController.Name = normalAttackDescribe;
                 animator.SetTrigger(normalAttackAnimTrigger);
                 // TODO: Distribution
                 normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);
@@ -175,16 +214,7 @@ public class EnemyCombatController : MonoBehaviour
         {
             if (leaveTimer >= resetAfterLeaving)
             {
-                character.ResetDynamicValue();
-                skillTimer = StatsConst.SKILL_CHECK_INTERVAL;
-                normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);
-
-                foreach (var skill in Skills)
-                {
-                    SkillCooldowns[skill] = 0f;
-                }
-
-                OnReset?.Invoke();
+                Reset();
             }
             else
                 leaveTimer += Time.deltaTime;
@@ -197,8 +227,9 @@ public class EnemyCombatController : MonoBehaviour
     {
         wanderTimer += Time.deltaTime;
 
-        if(wanderTimer >= StatsConst.WANDER_INTERVAL)
+        if(wanderTimer >= wanderTime)
         {
+            wanderTime = Random.Range(0.7f * StatsConst.WANDER_INTERVAL, 1.25f * StatsConst.WANDER_INTERVAL);
             wanderTimer = 0f;
 
             Vector3 randomPos;

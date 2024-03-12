@@ -849,6 +849,7 @@ GameObject:
   - component: {fileID: 4882590064214274}
   - component: {fileID: 95528395651247964}
   - component: {fileID: 2058128318477371932}
+  - component: {fileID: 4921840958321732925}
   - component: {fileID: 64766311757366526}
   - component: {fileID: 7943369461782761038}
   - component: {fileID: 737672090467413326}
@@ -945,6 +946,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4921840958321732925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837317425425208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f81d3480676494f4cb110dbac284c975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Thorntle
 --- !u!114 &64766311757366526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1097,10 +1111,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1837317425425208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a972d247d722bf34099bf40c69076747, type: 3}
+  m_Script: {fileID: 11500000, guid: 496ca4a9d688f934ab51c4f77b4ad6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 95528395651247964}
+  describable: {fileID: 0}
+  targetTransform: {fileID: 0}
   StopDistance: 2
 --- !u!114 &2691818356965206860
 MonoBehaviour:
@@ -1117,13 +1133,12 @@ MonoBehaviour:
   animator: {fileID: 95528395651247964}
   character: {fileID: 64766311757366526}
   controller: {fileID: 737672090467413326}
+  hitController: {fileID: 1229148752862930689}
+  normalAttackAnimDescribe: Basic Hit
   normalAttackAnimTrigger: Attack1
   castSkillChance: 30
   Skills:
-  - SkillAnimationTrigger: Attack2
-    ManaRequired: 15
-    Cooldown: 5
-    AttackPercent: 120
+  - {fileID: 11400000, guid: 033a067bde81d324bb87bfecc2ddba3b, type: 2}
 --- !u!195 &8137097179081481366
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1595,7 +1610,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682103d34ed37c64e9c0f7fd6e062335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: Headbutt
   sourceChara: {fileID: 64766311757366526}
+  Skill: {fileID: 0}
   hitVFX: {fileID: 0}
 --- !u!1 &5642518297490793910
 GameObject:
@@ -1608,7 +1625,7 @@ GameObject:
   - component: {fileID: 5613033616883775128}
   - component: {fileID: 98618386840577081}
   - component: {fileID: 3259728256612968539}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Detector
   m_TagString: Untagged
   m_Icon: {fileID: 0}

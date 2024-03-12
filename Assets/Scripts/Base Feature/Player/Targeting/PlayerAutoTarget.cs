@@ -17,19 +17,20 @@ public class PlayerAutoTarget : PlayerInputControl
     {
         if (playerControls == null) return;
         playerControls.Gameplay.Attack.performed += DoTarget;
-        playerControls.Gameplay.Skill1.performed += DoTarget;
-        playerControls.Gameplay.Skill2.performed += DoTarget;
     }
 
     protected override void UnregisterInputCallbacks()
     {
         if (playerControls == null) return;
         playerControls.Gameplay.Attack.performed -= DoTarget;
-        playerControls.Gameplay.Skill1.performed -= DoTarget;
-        playerControls.Gameplay.Skill2.performed -= DoTarget;
     }
 
     private void DoTarget(InputAction.CallbackContext context)
+    {
+        FaceTarget();
+    }
+
+    public void FaceTarget()
     {
         if (!animator.GetBool("CanMove")) return;
 
