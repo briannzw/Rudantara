@@ -20,10 +20,14 @@ public class UpgradeRandomizer : MonoBehaviour
     [SerializeField] List<Upgrade> randomizedUpgrades = new List<Upgrade>();
     private Dictionary<UpgradeRarity, int> rarityCounts = new Dictionary<UpgradeRarity, int>();
 
+    long firstSeed = 0; 
+
     void Start()
     {
-
         StartUpgrade();
+        
+        firstSeed = System.DateTime.Now.Ticks % availableUpgrades.Count;
+        Debug.Log("First seed:"+ firstSeed);
     }
 
     public void TestTrigger()
@@ -165,17 +169,21 @@ public class UpgradeRandomizer : MonoBehaviour
     long m = availableUpgrades.Count; // Modulus
     long a = upgradeDatabase.commonUpgrades.Count;    // Multiplier
     long c = upgradeDatabase.rareUpgrades.Count; // Increment
-    long seed = System.DateTime.Now.Ticks % m; 
+    long seed = 0;
     Debug.Log("Modulus: "+m);
     Debug.Log("Pengali: "+a);
     Debug.Log("Penambah: "+c);
-    Debug.Log("Seed: "+seed);
 
     for (int i = 0; i < 3; i++)
     {
-        seed = (a * seed + c) % m;
-
-        Debug.Log(seed); 
+        if(seed = 0){
+            seed = (a * firstSeed + c) % m;
+        }
+        else{
+            seed = (a * seed + c) % m;
+        }
+        
+        Debug.Log("Seed :"+seed); 
 
         UpgradeRarity selectedRarity = GetRarityFromLCG(seed);
 
