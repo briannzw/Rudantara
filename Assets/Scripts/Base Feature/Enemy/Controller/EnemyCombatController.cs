@@ -11,6 +11,8 @@ public class EnemyCombatController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Character character;
     [SerializeField] private EnemyController controller;
+    
+    [SerializeField] private PlayerUpgrades playerUpgrades;
 
     [Header("Normal Attack")]
     [SerializeField] private string normalAttackAnimTrigger;
@@ -49,6 +51,7 @@ public class EnemyCombatController : MonoBehaviour
 
     private void Start()
     {
+        playerUpgrades = FindObjectOfType<PlayerUpgrades>();
         origin = transform.position;
 
         // Reset Cooldowns for all Skills
@@ -123,6 +126,7 @@ public class EnemyCombatController : MonoBehaviour
 
     private IEnumerator AnimateDead()
     {
+        playerUpgrades.KillCountUp();
         agent.enabled = false;
         yield return new WaitForSeconds(2f);
         float timer = 0f;
