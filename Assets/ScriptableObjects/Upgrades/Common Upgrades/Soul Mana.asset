@@ -15,7 +15,8 @@ MonoBehaviour:
   upgradeName: Soul Mana
   upgradeID: 10
   upgradeIcon: {fileID: 0}
-  upgradeDesc: Leftover mana of the many souls. Increase Mana Regen.
+  upgradeDesc: Leftover mana of the many souls. Increase Mana Regen  by a certiain
+    percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 1

@@ -44,12 +44,8 @@ public class UpgradeButton : MonoBehaviour
         if (upgrade != null)
         {
             upgradeList.chosenUpgrades.Add(upgrade);
-            Debug.Log(upgrade);
             for(int i = 0;i<upgrade.stats.Length;i++ ){
                 character.ModifyStat(upgrade.stats[i].upgradeEnum, new StatModifier(upgrade.stats[i].upgradeValueStatic, upgrade.stats[i].statModType));
-                Debug.Log("upgrade enum: "+upgrade.stats[i].upgradeEnum);
-                Debug.Log("Upgrade value: "+upgrade.stats[i].upgradeValueStatic);
-                Debug.Log("Upgrade type: "+ upgrade.stats[i].statModType);
             }            
             
             //disable raycast wile animate
@@ -65,7 +61,6 @@ public class UpgradeButton : MonoBehaviour
     }
     void EnableCanvasAfterDelay() {
         canvasRaycast.enabled = true;
-        Debug.Log("canvas activated again");
     }
 
     void SetFalseUpgradeCanvas() {

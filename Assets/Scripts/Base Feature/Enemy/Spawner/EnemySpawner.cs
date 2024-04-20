@@ -27,6 +27,8 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         poolManager = PoolManager.Instance;
+        Debug.Log(spawnObject);
+        Debug.Log(maxSpawn);
         poolManager.Add(spawnObject, maxSpawn);
         OnRelease += Release;
         StartCoroutine(DoSpawn());

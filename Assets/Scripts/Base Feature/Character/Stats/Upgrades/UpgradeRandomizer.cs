@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine.Events;
 using Unity.VisualScripting;
 
+using Kryz.CharacterStats;
+
 public class UpgradeRandomizer : MonoBehaviour
 {
     public static UpgradeRandomizer Instance { get; private set; }
@@ -16,18 +18,25 @@ public class UpgradeRandomizer : MonoBehaviour
     public Image[] upgradeBgColor;
     public Button[] upgradeButtons;
 
+    private bool seedInitialized = false; 
+
+
     private List<Upgrade> availableUpgrades = new List<Upgrade>();
     [SerializeField] List<Upgrade> randomizedUpgrades = new List<Upgrade>();
     private Dictionary<UpgradeRarity, int> rarityCounts = new Dictionary<UpgradeRarity, int>();
 
-    long firstSeed = 0; 
+    // LCG parameters
+    long firstSeed = System.DateTime.Now.Ticks; 
+    [SerializeField] long seed;
+    [SerializeField] long m;
+    [SerializeField] long a;
+    [SerializeField] long c;
+    
 
     void Start()
     {
+
         StartUpgrade();
-        
-        firstSeed = System.DateTime.Now.Ticks % availableUpgrades.Count;
-        Debug.Log("First seed:"+ firstSeed);
     }
 
     public void TestTrigger()
@@ -165,35 +174,88 @@ public class UpgradeRandomizer : MonoBehaviour
 
    private void RandomizeUpgradesWithLCG()
 {
-    // LCG parameters
-    long m = availableUpgrades.Count; // Modulus
-    long a = upgradeDatabase.commonUpgrades.Count;    // Multiplier
-    long c = upgradeDatabase.rareUpgrades.Count; // Increment
-    long seed = 0;
+    //LCG Constant
+    m = availableUpgrades.Count; // Modulus
+    a = upgradeDatabase.commonUpgrades.Count;    // Multiplier
+    c = upgradeDatabase.rareUpgrades.Count; // Increment
     Debug.Log("Modulus: "+m);
     Debug.Log("Pengali: "+a);
     Debug.Log("Penambah: "+c);
+    Debug.Log("First seed: "+firstSeed);
+    Debug.Log("Seed :"+seed);
 
-    for (int i = 0; i < 3; i++)
+     for (int i = 0; i < 3; i++)
     {
-        if(seed = 0){
-            seed = (a * firstSeed + c) % m;
+        if (!seedInitialized)
+        {
+            seed = firstSeed;
+            seedInitialized = true;
         }
-        else{
+        else if (seed < 0) 
+        {
+            seed = 0; 
+        }
+        else
+        {
             seed = (a * seed + c) % m;
         }
-        
-        Debug.Log("Seed :"+seed); 
+
+        Debug.Log("result seed: " + seed);
 
         UpgradeRarity selectedRarity = GetRarityFromLCG(seed);
 
         Upgrade selectedUpgrade = GetRandomUpgrade(selectedRarity, seed);
-
+        
+        if (!seedInitialized)
+        {
+            seed = firstSeed;
+            seedInitialized = true;
+        }
+        else if (seed < 0) 
+        {
+            seed = 0; 
+        }
+        else
+        {
+            seed = (a * seed + c) % m;
+        }
+        
         while (randomizedUpgrades.Contains(selectedUpgrade))
         {
             seed = (a * seed + c) % m;
             selectedRarity = GetRarityFromLCG(seed);
             selectedUpgrade = GetRandomUpgrade(selectedRarity, seed);
+        }
+
+        foreach (var stat in selectedUpgrade.stats){
+            if(selectedUpgrade.rarity == UpgradeRarity.Common){
+                if(stat.statModType == StatModType.Flat){
+                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
+                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                        stat.upgradeValueStatic = stat.upgradeLimitDown;
+                    }             
+                }
+                if(stat.statModType == StatModType.PercentAdd){
+                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
+                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                        stat.upgradeValueStatic = stat.upgradeLimitDown;
+                    }                
+                }
+            }
+             if(selectedUpgrade.rarity == UpgradeRarity.Rare){
+                if(stat.statModType == StatModType.Flat){
+                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
+                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                        stat.upgradeValueStatic = stat.upgradeLimitDown;
+                    }            
+                }
+                if(stat.statModType == StatModType.PercentAdd){
+                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
+                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                        stat.upgradeValueStatic = stat.upgradeLimitDown;
+                    }              
+                }
+            }
         }
 
         randomizedUpgrades.Add(selectedUpgrade);
@@ -241,7 +303,6 @@ private UpgradeRarity GetRarityFromLCG(long seed)
             
             UpgradeButton upgradeButton = upgradeButtons[i].GetComponent<UpgradeButton>();
             upgradeButton.SetUpgrade(randomizedUpgrades[i]);
-            Debug.Log(randomizedUpgrades[i]);
 
             upgradeButtons[i].interactable = true;
 
@@ -258,7 +319,12 @@ private UpgradeRarity GetRarityFromLCG(long seed)
 
         if(upgrade.upgradeDesc != null)
         {
-            description = upgrade.upgradeDesc;
+            description = upgrade.upgradeDesc + "\n";
+
+             foreach (var stat in upgrade.stats)
+            {
+                description += $"{stat.upgradeEnum}: {stat.upgradeValueStatic} ({stat.upgradeLimitDown} - {stat.upgradeLimitUp})\n";
+            }
         }
         
         return description;

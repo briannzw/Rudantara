@@ -79,6 +79,7 @@ public class EnemyCombatController : MonoBehaviour
         character = GetComponent<Character>();
         controller = GetComponent<AgentController>();
         agent = GetComponent<NavMeshAgent>();
+        playerUpgrades = FindObjectOfType<PlayerUpgrades>();
         if (!describable) describable = GetComponentInChildren<Describable>();
     }
 

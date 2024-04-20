@@ -15,7 +15,8 @@ MonoBehaviour:
   upgradeName: Soul Essence
   upgradeID: 9
   upgradeIcon: {fileID: 0}
-  upgradeDesc: A small part of the many souls. Increase Health Regen.
+  upgradeDesc: A small part of the many souls. Increase Health Regen by a certain
+    percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 1

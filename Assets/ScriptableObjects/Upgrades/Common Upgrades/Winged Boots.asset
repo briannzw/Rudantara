@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Winged Boots
   upgradeID: 8
   upgradeIcon: {fileID: 0}
-  upgradeDesc: Boots of the angels. Increase Speed.
+  upgradeDesc: Boots of the angels. Increase Speed by a certain percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 1

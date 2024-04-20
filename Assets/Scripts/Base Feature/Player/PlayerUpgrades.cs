@@ -17,7 +17,7 @@ public class PlayerUpgrades : MonoBehaviour
     public void KillCountUp()
     {
         killCount++;
-        if (killCount >= 1){
+        if (killCount >= 2){
                 upgradeUIManager.TriggerUI();
                 killCount = 0;
         }

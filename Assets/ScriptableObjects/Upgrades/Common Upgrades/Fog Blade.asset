@@ -19,8 +19,12 @@ MonoBehaviour:
   rarity: 0
   stats:
   - upgradeValueStatic: 5
+    upgradeLimitDown: 3
+    upgradeLimitUp: 0
     upgradeEnum: 0
     statModType: 100
   - upgradeValueStatic: -2
+    upgradeLimitDown: 0
+    upgradeLimitUp: 0
     upgradeEnum: 1
     statModType: 100

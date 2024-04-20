@@ -15,7 +15,8 @@ MonoBehaviour:
   upgradeName: Rhodonite Shield
   upgradeID: 7
   upgradeIcon: {fileID: 0}
-  upgradeDesc: Shield created from the stone of love. Increase Defense.
+  upgradeDesc: Shield created from the stone of love. Increase Defense by a certain
+    percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 0

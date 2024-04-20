@@ -15,7 +15,8 @@ MonoBehaviour:
   upgradeName: Rhodonite Blade
   upgradeID: 6
   upgradeIcon: {fileID: 0}
-  upgradeDesc: Blade created from the stone of love. Increase Defense.
+  upgradeDesc: Blade created from the stone of love. Increase Attack by a certain
+    percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 0

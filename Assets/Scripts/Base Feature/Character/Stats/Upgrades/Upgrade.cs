@@ -6,7 +6,7 @@ using Kryz.CharacterStats;
 [CreateAssetMenu(fileName = "New Upgrade", menuName = "Upgrade")]
 public class Upgrade : ScriptableObject
 {
-     public string upgradeName;
+    public string upgradeName;
    public int upgradeID;
    public Sprite upgradeIcon;
    
@@ -20,6 +20,8 @@ public class Upgrade : ScriptableObject
 public class UpgradeStats
 {
     public float upgradeValueStatic;
+    public int upgradeLimitDown;
+    public int upgradeLimitUp;
     public StatEnum upgradeEnum;
     public StatModType statModType;
 }
