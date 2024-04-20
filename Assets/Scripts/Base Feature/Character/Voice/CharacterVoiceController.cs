@@ -11,9 +11,11 @@ public class CharacterVoiceController : MonoBehaviour
 
     public void PlayCharaVoice(AudioClip audioClip)
     {
-        if (audioSource.isPlaying) return;
+        // Prevent Frequent Same Voices
+        if (Random.Range(0, 100) < 10f) return;
 
-        audioSource.Stop();
+        if (audioSource.isPlaying) audioSource.Stop();
+
         audioSource.clip = audioClip;
         audioSource.Play();
     }

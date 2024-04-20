@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour
 {
-    [SerializeField] private EnemyController controller;
+    [SerializeField] private AgentController controller;
 
     private void Awake()
     {

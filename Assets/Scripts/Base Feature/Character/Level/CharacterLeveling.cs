@@ -23,19 +23,23 @@ public class CharacterLeveling : MonoBehaviour
     public float Experiences { get; private set; }
 
     // Enemy Specific
-    private EnemyController enemyController;
+    private AgentController enemyController;
 
     [Header("VFX")]
     [SerializeField] private GameObject levelUpVFX;
 
-    private void Awake()
+    private void OnEnable()
     {
         CurrentLevel = 1;
         Experiences = 0;
-
-        character = GetComponent<Character>();
         // Assign stats to character based on level
         character.Initialize(this);
+        character.ResetDynamicValue();
+    }
+
+    private void Awake()
+    {
+        character = GetComponent<Character>();
     }
 
     private void Start()
@@ -51,8 +55,8 @@ public class CharacterLeveling : MonoBehaviour
         character.OnCharacterDie += () => StopAllCoroutines();
 
         // Enemy only
-        if(GetComponent<EnemyController>())
-            enemyController = GetComponent<EnemyController>();
+        if(GetComponent<AgentController>())
+            enemyController = GetComponent<AgentController>();
     }
 
     private IEnumerator ExpPerSecond()

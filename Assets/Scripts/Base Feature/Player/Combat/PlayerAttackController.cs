@@ -6,6 +6,7 @@ public class PlayerAttackController : PlayerInputControl
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private Character character;
+    [SerializeField] private HitController weaponHitController;
 
     private int resistance;
 
@@ -31,7 +32,10 @@ public class PlayerAttackController : PlayerInputControl
     private void OnAttack(InputAction.CallbackContext context)
     {
         if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f || animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Blend Tree"))
+        {
             animator.SetTrigger("Attack");
+            weaponHitController.Name = "Basic Hit";
+        }
     }
 
     #region Callbacks

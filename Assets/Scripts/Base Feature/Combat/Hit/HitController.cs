@@ -1,17 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class HitController : MonoBehaviour
+public class HitController : Describable
 {
     [Header("References")]
     public Character sourceChara;
+    public Skill Skill;
 
     [Header("VFX")]
     [SerializeField] private GameObject hitVFX;
 
+    private bool hit = false;
+
     private void Awake()
     {
+        gameObject.tag = "Hit";
         if(!sourceChara) sourceChara = GetComponentInParent<Character>();
     }
 
@@ -23,12 +26,21 @@ public class HitController : MonoBehaviour
             if (!chara) return;
 
             // Final Damage = Source Chara Damage - Target Chara Defense
-            float finalDamage = sourceChara.GetDamage() - chara.CheckStat(StatEnum.Defense);
+            float finalDamage = sourceChara.GetDamage();
+            finalDamage *= Skill != null ? Skill.AttackPercent / 100f : 1f;
+            finalDamage -= chara.CheckStat(StatEnum.Defense);
             if (finalDamage < 0) finalDamage = 0;
             chara.ChangeDynamicValue(DynamicStatEnum.Health, -finalDamage);
 
-            if(chara.CheckStat(DynamicStatEnum.Health) <= 0f)
+            if (chara.CheckStat(DynamicStatEnum.Health) <= 0f)
                 sourceChara.OnCharacterKill?.Invoke(chara);
+
+            Describable source = sourceChara.GetComponentInChildren<Describable>();
+            Describable strucked = other.GetComponentInChildren<Describable>();
+            if (source != null && !hit)
+                OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + Name + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
+
+            hit = true;
 
             // VFX
             if (hitVFX == null) return;
@@ -36,6 +48,15 @@ public class HitController : MonoBehaviour
             GameObject go = Instantiate(hitVFX, pos, Quaternion.identity);
             Destroy(go, hitVFX.GetComponent<VisualEffect>().GetFloat("Lifetime"));
         }
+    }
+
+    private void OnDisable()
+    {
+        if (hit) return;
+
+        Describable source = sourceChara.GetComponentInChildren<Describable>();
+        if (source != null)
+            OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + Name + "] missed.");
     }
 
     private bool CompareTags(Collider other)

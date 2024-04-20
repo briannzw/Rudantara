@@ -1,26 +1,33 @@
-using System.Drawing;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class WeaponAnim : MonoBehaviour
 {
-
     [Header("References")]
+    [SerializeField] private Character character;
     [SerializeField] private Transform weaponTransform;
-    //private Weapon weapon;
+    [SerializeField] private Transform weaponTransformAlt;
 
     [Header("VFX Parameters")]
     [SerializeField] private Vector3 size = Vector3.one;
 
-    private void Start()
+    private HitController hitController;
+    private HitController hitControllerAlt;
+
+    private void Awake()
     {
-        //weapon = WeaponTransform.GetComponentInChildren<Weapon>();
+        hitController = weaponTransform.GetComponentInChildren<HitController>(includeInactive: true);
+        if(weaponTransformAlt) hitControllerAlt = weaponTransformAlt.GetComponentInChildren<HitController>(includeInactive: true);
     }
 
     public void SpawnVFX(GameObject VFX)
     {
         GameObject go = Instantiate(VFX, weaponTransform.transform.position, weaponTransform.transform.rotation);
+        go.transform.localScale = size;
+        Destroy(go, VFX.GetComponent<VisualEffect>().GetFloat("Lifetime"));
+
+        if (!weaponTransformAlt) return;
+        go = Instantiate(VFX, weaponTransformAlt.transform.position, weaponTransformAlt.transform.rotation);
         go.transform.localScale = size;
         Destroy(go, VFX.GetComponent<VisualEffect>().GetFloat("Lifetime"));
     }
@@ -31,12 +38,12 @@ public class WeaponAnim : MonoBehaviour
         float offset = myEvent.floatParameter;
         GameObject go = Instantiate(VFX, transform.position + transform.forward * offset, Quaternion.identity);
         go.transform.forward = transform.forward;
-        //WeaponHit hit = go.GetComponent<WeaponHit>();
-        //if (hit != null)
-        //{
-        //    hit.Weapon = weapon;
-        //    hit.Skill = weapon.SkillMap[(hit.Skill.isBaseSkill) ? hit.Skill : hit.Skill.baseSkill];
-        //}
+        // Global Skill
+        HitController hit = go.GetComponent<HitController>();
+        if (hit != null)
+        {
+            hit.sourceChara = character;
+        }
         Destroy(go, VFX.GetComponent<VisualEffect>().GetFloat("Lifetime"));
     }
 
@@ -45,8 +52,26 @@ public class WeaponAnim : MonoBehaviour
         //weapon.PlaySound();
     }
 
+    public void SetSkill(AnimationEvent myEvent)
+    {
+        if(myEvent.objectReferenceParameter == null) return;
+
+        Skill skill = (Skill)myEvent.objectReferenceParameter;
+
+        hitController.Skill = skill;
+        hitController.Name = skill.Name;
+
+        if (hitControllerAlt)
+        {
+            hitControllerAlt.Skill = skill;
+            hitControllerAlt.Name = skill.Name;
+        }
+    }
+
     public void ResetSkill()
     {
-        //weapon.LocalHit.Skill = null;
+        hitController.Skill = null;
+        
+        if(hitControllerAlt) hitControllerAlt.Skill = null;
     }
 }

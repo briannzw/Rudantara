@@ -7,11 +7,12 @@ TagManager:
   - Weapon
   - Enemy
   - Companion
+  - Hit
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Describable
   - Water
   - UI
   - Enemy
