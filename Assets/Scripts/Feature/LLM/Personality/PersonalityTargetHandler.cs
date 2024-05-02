@@ -6,8 +6,6 @@ public class PersonalityTargetHandler : MonoBehaviour
     private Dictionary<string, Character> prevTargets = new();
     private Dictionary<string, Character> targets = new();
 
-    [SerializeField, TextArea] private string targetPrompt;
-
     public void AddTarget(string name, Character chara)
     {
         if (targets.ContainsKey(name)) return;
@@ -33,13 +31,15 @@ public class PersonalityTargetHandler : MonoBehaviour
 
     public string CreatePrompt()
     {
-        string prompt = targetPrompt + "\n";
+        string prompt = "";
 
         foreach(var name in targets)
         {
             // Indexer
             prompt += $"{name.Key}\n";
         }
+
+        if (targets.Count == 0) prompt += "none\n";
 
         return prompt;
     }

@@ -28,11 +28,17 @@ public class AgentController : MonoBehaviour
         agent.baseOffset = -.1f;
 
         if(!describable) describable = GetComponentInChildren<Describable>();
+
+        agent.enabled = false;
+        DungeonGenerator.Instance.OnDungeonComplete += () => agent.enabled = true;
     }
 
     private void Update()
     {
+        if (!agent.isActiveAndEnabled) return;
+
         MoveToTarget();
+        CheckDestinationReach();
     }
 
     public void SetTarget(Transform target)
@@ -54,6 +60,14 @@ public class AgentController : MonoBehaviour
         }
     }
 
+    public void SetDestination(Vector3 position)
+    {
+        targetTransform = null;
+
+        agent.stoppingDistance = 0f;
+        agent.SetDestination(position);
+    }
+
     private void MoveToTarget()
     {
         if (targetTransform == null)
@@ -70,23 +84,12 @@ public class AgentController : MonoBehaviour
 
         agent.stoppingDistance = StopDistance;
         agent.SetDestination(targetTransform.position);
-        animator.SetBool("IsMoving", true);
-
-        // Agent reaches target destination
-        if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-        {
-            animator.SetBool("IsMoving", false);
-            FaceTarget();
-            IsTargetInRange = true;
-        }
-        else
-        {
-            IsTargetInRange = false;
-        }
     }
 
     private void FaceTarget()
     {
+        if (targetTransform == null) return;
+
         Vector3 targetDirection;
         Quaternion lookRotation;
         targetDirection = (targetTransform.position - transform.position).normalized;
@@ -96,5 +99,34 @@ public class AgentController : MonoBehaviour
 
         lookRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0f, targetDirection.z));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, 175f * Time.deltaTime);
+    }
+
+    public bool IsTargetDied()
+    {
+        if (IsTargetNull) return true;
+
+        var targetChara = targetTransform.GetComponent<Character>();
+        if (!targetChara) return true;
+
+        if (targetChara.IsDead) return true;
+
+        return false;
+    }
+
+    private void CheckDestinationReach()
+    {
+        // Agent reaches target destination
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            animator.SetBool("IsMoving", false);
+            FaceTarget();
+            
+            if(targetTransform) IsTargetInRange = true;
+        }
+        else
+        {
+            animator.SetBool("IsMoving", true);
+            IsTargetInRange = false;
+        }
     }
 }

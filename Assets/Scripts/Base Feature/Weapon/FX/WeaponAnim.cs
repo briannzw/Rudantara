@@ -7,6 +7,7 @@ public class WeaponAnim : MonoBehaviour
     [SerializeField] private Character character;
     [SerializeField] private Transform weaponTransform;
     [SerializeField] private Transform weaponTransformAlt;
+    [SerializeField] private SkillCaster skillCaster;
 
     [Header("VFX Parameters")]
     [SerializeField] private Vector3 size = Vector3.one;
@@ -73,5 +74,14 @@ public class WeaponAnim : MonoBehaviour
         hitController.Skill = null;
         
         if(hitControllerAlt) hitControllerAlt.Skill = null;
+    }
+
+    public void CastSkill(AnimationEvent myEvent)
+    {
+        if (myEvent.objectReferenceParameter == null) return;
+
+        Skill skill = (Skill)myEvent.objectReferenceParameter;
+
+        skillCaster.Cast(skill);
     }
 }

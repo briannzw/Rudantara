@@ -38,7 +38,7 @@ public class HitController : Describable
             Describable source = sourceChara.GetComponentInChildren<Describable>();
             Describable strucked = other.GetComponentInChildren<Describable>();
             if (source != null && !hit)
-                OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + Name + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
+                OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + (Skill ? Skill.Name : Name) + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
 
             hit = true;
 
@@ -56,7 +56,7 @@ public class HitController : Describable
 
         Describable source = sourceChara.GetComponentInChildren<Describable>();
         if (source != null)
-            OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + Name + "] missed.");
+            OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + (Skill ? Skill.Name : Name) + "] didn't hit anything.");
     }
 
     private bool CompareTags(Collider other)

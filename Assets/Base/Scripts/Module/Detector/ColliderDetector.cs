@@ -36,7 +36,7 @@ namespace Module.Detector
             return objectsFound;
         }
 
-        public static T FindNearest<T>(Vector3 axis, float radius, LayerMask targetMask, Vector3 forward = new Vector3(), float angle = 360) where T : class
+        public static T FindNearest<T>(Vector3 axis, float radius, LayerMask targetMask, Vector3 forward = new Vector3(), float angle = 360, string tag = null) where T : class
         {
             T nearestObject = null;
             float nearestDistance = Mathf.Infinity;
@@ -46,6 +46,8 @@ namespace Module.Detector
             foreach (Collider targetCollider in targetsInRadius)
             {
                 Transform target = targetCollider.transform;
+                if (tag != null && !target.CompareTag(tag)) continue;
+
                 Vector3 directionToTarget = (target.position - axis).normalized;
                 if (Vector3.Angle(forward, directionToTarget) <= (angle / 2))
                 {

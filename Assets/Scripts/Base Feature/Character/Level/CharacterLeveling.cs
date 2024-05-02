@@ -52,7 +52,7 @@ public class CharacterLeveling : MonoBehaviour
             if (charLevel) Experiences += Mathf.RoundToInt(charLevel.Experiences * StatsConst.KILL_EXP_MODIFIER * character.CheckStat(StatEnum.ExpMultiplier));
         };
 
-        character.OnCharacterDie += () => StopAllCoroutines();
+        character.OnCharacterDie += (Character chara) => StopAllCoroutines();
 
         // Enemy only
         if(GetComponent<AgentController>())

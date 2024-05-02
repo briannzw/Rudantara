@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class MemoryPersistence : MonoBehaviour
 {
+    private SerializedDictionary<string, int> pastMemory = new();
     private SerializedDictionary<string, int> memory = new();
+    [SerializeField, TextArea] private string emptyMemoryDescription;
 
     public void Insert(string memoryString)
     {
@@ -20,19 +22,33 @@ public class MemoryPersistence : MonoBehaviour
     {
         string outMemory = "";
 
-        if (memory.Count == 0) return "Idle";
+        if (memory.Count == 0) return emptyMemoryDescription + '\n';
 
         foreach(var mem in memory)
         {
             outMemory += mem.Key + " " + mem.Value + " time(s)\n";
         }
 
+        return outMemory;
+    }
+
+    public string Reflect()
+    {
+        string outMemory = "";
+
+        if (pastMemory.Count == 0) return emptyMemoryDescription + '\n';
+
+        foreach (var mem in pastMemory)
+        {
+            outMemory += mem.Key + " " + mem.Value + " time(s)\n";
+        }
 
         return outMemory;
     }
 
     public void Reset()
     {
+        pastMemory = memory;
         memory.Clear();
     }
 

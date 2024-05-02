@@ -7,9 +7,9 @@ using UnityEngine.AI;
 
 public class CompanionCombatController : MonoBehaviour
 {
-    private enum CompanionState
+    private enum CompanionCombatState
     {
-        Attack, Flee, Wander, Idle, Down
+        Attack, Flee, Idle, Down
     }
 
     [Header("References")]
@@ -24,39 +24,34 @@ public class CompanionCombatController : MonoBehaviour
         
     [Header("Normal Attack")]
     [SerializeField] private string normalAttackAnimTrigger = "Attack";
-    [SerializeField] private string normalAttackDescribe = "Basic Hit";
 
     [Header("Skills")]
-    [SerializeField] private List<Skill> Skills = new();
+    [SerializeField] private List<Skill> skills = new();
+    [SerializeField] private SkillCaster skillCaster;
 
     private NavMeshAgent agent;
     private Dictionary<Skill, float> SkillCooldowns = new();
-
-    private Describable describable;
 
     private int resistance;
 
     private float normalTimer;
 
-    private float wanderTime;
-    private float wanderTimer;
-
     private float fleeTimer;
 
-    private CompanionState currentState;
+    private CompanionCombatState currentState;
     private int nextActionIndex;
 
     private void Awake()
     {
         if (!animator) animator = GetComponentInChildren<Animator>();
-        if (!describable) describable = GetComponentInChildren<Describable>();
         agent = GetComponent<NavMeshAgent>();
+        DescribeSkills();
     }
 
     private void Start()
     {
         // Reset Cooldowns for all Skills
-        foreach (var skill in Skills)
+        foreach (var skill in skills)
         {
             SkillCooldowns.Add(skill, 0f);
         }
@@ -74,15 +69,28 @@ public class CompanionCombatController : MonoBehaviour
                 resistance = StatsConst.HURT_RESISTANCE;
             }
         };
-        wanderTime = Random.Range(0.7f * StatsConst.WANDER_INTERVAL, 1.25f * StatsConst.WANDER_INTERVAL);
+    }
 
+    private void OnEnable()
+    {
         // Action
         actionModule.OnResponseReceived += ChangeState;
-        currentState = CompanionState.Wander;
+        currentState = CompanionCombatState.Idle;
+    }
+
+    private void OnDisable()
+    {
+        actionModule.OnResponseReceived -= ChangeState;
+        StopAllCoroutines();
     }
 
     private void ChangeState(ActionResponse actionResponse)
     {
+        if (actionResponse.State != 1)
+        {
+            currentState = CompanionCombatState.Idle;
+            return;
+        }
         int chosenIndex = actionResponse.ActionIndex;
         StopAllCoroutines();
         nextActionIndex = 0;
@@ -108,41 +116,46 @@ public class CompanionCombatController : MonoBehaviour
             // Focus attacking one target
             case 0:
                 controller.SetTarget(actionTarget.GetTarget(actionResponse.TargetName));
-                currentState = CompanionState.Attack;
+                currentState = CompanionCombatState.Attack;
                 nextActionIndex = actionResponse.AlternativeActionIndex + 1;
                 break;
             // Attack nearest seen enemy
             case 1:
                 controller.SetTarget(GetNearestEnemy());
-                currentState = CompanionState.Attack;
+                currentState = CompanionCombatState.Attack;
                 // Repeat self
                 nextActionIndex = 1;
                 break;
             // Protect your partner by taunting enemies, tanking the damages
             case 2:
-                controller.SetTarget(playerTransform);
-                currentState = CompanionState.Idle;
+                controller.SetTarget(GetNearestEnemy());
+                currentState = CompanionCombatState.Attack;
                 StartCoroutine(Taunt());
                 break;
             // Protect your partner by luring enemies far from your partner
             case 3:
                 controller.SetTarget(null);
                 StartCoroutine(Taunt());
-                currentState = CompanionState.Flee;
+                currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
             // Seek protection from your partner
             case 4:
                 controller.SetTarget(playerTransform);
-                currentState = CompanionState.Flee;
+                currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
             // Flee from the battle to the safe place
             case 5:
                 controller.SetTarget(null);
-                currentState = CompanionState.Flee;
+                currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
+        }
+
+        if(actionResponse.SkillIndex != -1)
+        {
+            Cast(skills[actionResponse.SkillIndex], actionTarget.GetTarget(actionResponse.SkillTarget).GetComponent<Character>());
         }
     }
 
@@ -153,20 +166,21 @@ public class CompanionCombatController : MonoBehaviour
 
         switch (currentState)
         {
-            case CompanionState.Attack:
+            case CompanionCombatState.Attack:
                 {
-                    if (controller.IsTargetNull && nextActionIndex != 0) ChangeState(new ActionResponse(nextActionIndex));
+                    if ((controller.IsTargetNull || controller.IsTargetDied()) && nextActionIndex != 0) ChangeState(new ActionResponse(nextActionIndex));
                     if (!controller.IsTargetInRange) return;
 
                     normalTimer -= Time.deltaTime;
                     if (normalTimer < 0f)
                     {
                         animator.SetTrigger(normalAttackAnimTrigger);
+
                         normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);
                     }
                     break;
                 }
-            case CompanionState.Flee:
+            case CompanionCombatState.Flee:
                 {
                     fleeTimer += Time.deltaTime;
 
@@ -183,40 +197,8 @@ public class CompanionCombatController : MonoBehaviour
                     }
                     break;
                 }
-            case CompanionState.Wander:
-                {
-                    Wander();
-                    break;
-                }
-            case CompanionState.Idle:
+            case CompanionCombatState.Idle:
                 break;
-        }
-    }
-
-    private void Wander()
-    {
-        wanderTimer += Time.deltaTime;
-
-        if (wanderTimer >= wanderTime)
-        {
-            wanderTime = Random.Range(0.7f * StatsConst.WANDER_INTERVAL, 1.25f * StatsConst.WANDER_INTERVAL);
-            wanderTimer = 0f;
-
-            Vector3 randomPos;
-            if (Vector3.Distance(transform.position, playerTransform.position) > StatsConst.MAX_WANDER_FROM_SPAWN)
-            {
-                randomPos = playerTransform.position + Random.insideUnitSphere * Random.Range(StatsConst.MIN_WANDER_DISTANCE, StatsConst.MAX_WANDER_DISTANCE);
-                agent.stoppingDistance = 0f;
-                agent.SetDestination(randomPos);
-                return;
-            }
-
-            randomPos = transform.position + Random.insideUnitSphere * Random.Range(StatsConst.MIN_WANDER_DISTANCE, StatsConst.MAX_WANDER_DISTANCE);
-            if (NavMesh.SamplePosition(randomPos, out var hit, StatsConst.NAV_SAMPLE_POS_MAX_DISTANCE, 1 << NavMesh.GetAreaFromName("Walkable")))
-            {
-                agent.stoppingDistance = 0f;
-                agent.SetDestination(hit.position);
-            }
         }
     }
 
@@ -234,8 +216,32 @@ public class CompanionCombatController : MonoBehaviour
         }
     }
 
+    private void Cast(Skill skill, Character target)
+    {
+        if (!skills.Contains(skill)) return;
+
+        skillCaster.Target = target;
+    }
+
     private Transform GetNearestEnemy()
     {
         return ColliderDetector.FindNearest<Transform>(transform.position, 10f, LayerMask.GetMask("Enemy"));
+    }
+
+    private void DescribeSkills()
+    {
+        string description = "";
+
+        for (int i = 1; i <= skills.Count; i++)
+        {
+            // Indexer
+            description += $"{i}. {skills[i - 1].Name}";
+
+            // Seperator
+            if (i < skills.Count) description += ",\n";
+            else description += ".\n";
+        }
+
+        actionModule.skillDescribe = description;
     }
 }
