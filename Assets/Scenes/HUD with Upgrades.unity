@@ -3918,6 +3918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2101575800953576985, guid: 4a5c37d2857381d468220b71e1679f3b,
         type: 3}
+      propertyPath: playerLevel
+      value: 
+      objectReference: {fileID: 1988207693}
+    - target: {fileID: 2101575800953576985, guid: 4a5c37d2857381d468220b71e1679f3b,
+        type: 3}
       propertyPath: upgradeManager
       value: 
       objectReference: {fileID: 1816245183}
@@ -5314,6 +5319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1289170397}
   - component: {fileID: 1289170398}
+  - component: {fileID: 1289170399}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -5348,6 +5354,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c0b782eb7dde540982a891b634646b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1289170399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289170396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87abdab1086505c459dd1ac8609c0480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeUIManager: {fileID: 168863067}
 --- !u!1 &1370190056
 GameObject:
   m_ObjectHideFlags: 0

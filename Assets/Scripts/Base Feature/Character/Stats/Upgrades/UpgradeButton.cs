@@ -48,12 +48,10 @@ public class UpgradeButton : MonoBehaviour
                 character.ModifyStat(upgrade.stats[i].upgradeEnum, new StatModifier(upgrade.stats[i].upgradeValueStatic, upgrade.stats[i].statModType));
             }            
             
-            //disable raycast wile animate
             canvasRaycast.enabled = false;
 
             Invoke(nameof(SetFalseUpgradeCanvas), 1f);
 
-            //enable canvas again after animation finished
             Invoke(nameof(EnableCanvasAfterDelay), 1f);
 
             Time.timeScale = 1f;

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Chest : MonoBehaviour
-{ Animator animator;
-    [SerializeField] private UpgradeUIManager upgradeUIManager;
-    [SerializeField] private bool playerInRange = false; // Flag to track if the player is in range
+{   
+    Animator animator;
+    public UpgradeUIManager upgradeUIManager;
+    [SerializeField] private bool playerInRange = false; 
 
     void Start()
     {
-        upgradeUIManager = FindObjectOfType<UpgradeUIManager>();
+        upgradeUIManager = GameManager.Instance.upgradeUIManager;
         animator = GetComponentInParent<Animator>();
     }
 
@@ -42,14 +43,8 @@ public class Chest : MonoBehaviour
         animator.Play("Open");
         yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0).Length);
         
-        if (upgradeUIManager != null)
-        {
-            upgradeUIManager.TriggerUI();
-            Destroy(transform.parent.gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("UpgradeUIManager reference is not set in the Chest script.");
-        }
+        upgradeUIManager.TriggerUI();
+        Destroy(transform.parent.gameObject);
+     
     }
 }

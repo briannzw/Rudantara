@@ -8,12 +8,12 @@ public class EnemyRandomDrop : MonoBehaviour
     [SerializeField] private PlayerUpgrades playerUpgrades;
     // LCG parameters
     public UpgradeDatabase upgradeDatabase;
-    long firstSeed = System.DateTime.Now.Ticks; 
+    int firstSeed; 
     [SerializeField] bool firstInit = false;
-    [SerializeField] float seed;
-    [SerializeField] float m;
-    [SerializeField] float a;
-    [SerializeField] float c;
+    [SerializeField] int seed;
+    [SerializeField] int m;
+    [SerializeField] int a;
+    [SerializeField] int c;
     [SerializeField] private GameObject randomDrop;
 
     void Awake(){
@@ -27,11 +27,9 @@ public class EnemyRandomDrop : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    int LCG(int seed, int a, int c, int m){
+        return ((a * seed + c) % m);
+    } 
 
      public void RandomizeRandomDrop(Vector3 randomPos, Quaternion quaternion){
         m = upgradeDatabase.commonUpgrades.Count + upgradeDatabase.rareUpgrades.Count;   // modulus
@@ -40,13 +38,14 @@ public class EnemyRandomDrop : MonoBehaviour
         c = upgradeDatabase.rareUpgrades.Count; // Increment
    
         if (!firstInit){
-            seed = (a * firstSeed + c) % m;
+            firstSeed = (int)System.DateTime.Now.Ticks;
+            seed = LCG(firstSeed, a, c, m);
             firstInit = true;
         }
         else{
-            seed = (a * seed + c) % m; 
+            seed = LCG(seed, a, c, m);
         }
-        Debug.Log("LCG Dijalankan");
+        Debug.Log("Seed random drop:"+seed);
 
         float dropChance = (upgradeDatabase.commonUpgrades.Count + upgradeDatabase.rareUpgrades.Count) / 2; 
 

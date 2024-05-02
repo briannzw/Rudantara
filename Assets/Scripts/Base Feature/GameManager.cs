@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
     #region Singleton
     private static GameManager instance;
 
+    public UpgradeUIManager upgradeUIManager;
+
     public static GameManager Instance
     {
         get

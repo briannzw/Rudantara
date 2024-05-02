@@ -13,7 +13,6 @@ public class EnemyCombatController : MonoBehaviour
     [SerializeField] private AgentController controller;
     [SerializeField] private HitController hitController;
     [SerializeField] private EnemyRandomDrop enemyRandomDrop;
-    [SerializeField] private PlayerUpgrades playerUpgrades;
     private Describable describable;
     
 
@@ -80,7 +79,6 @@ public class EnemyCombatController : MonoBehaviour
         character = GetComponent<Character>();
         controller = GetComponent<AgentController>();
         agent = GetComponent<NavMeshAgent>();
-        playerUpgrades = FindObjectOfType<PlayerUpgrades>();
         enemyRandomDrop = FindObjectOfType<EnemyRandomDrop>();
         if (!describable) describable = GetComponentInChildren<Describable>();
     }
@@ -166,7 +164,6 @@ public class EnemyCombatController : MonoBehaviour
 
     private IEnumerator AnimateDead()
     {
-        playerUpgrades.KillCountUp();
         enemyRandomDrop.RandomizeRandomDrop(transform.position, Quaternion.identity);
         agent.enabled = false;
         yield return new WaitForSeconds(2f);
