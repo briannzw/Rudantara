@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Soul Mana
   upgradeID: 10
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: 4e8b35477a7fb5a46870c1973a523722, type: 3}
   upgradeDesc: Leftover mana of the many souls. Increase Mana Regen  by a certiain
     percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 1
+    upgradeLimitDown: 1
+    upgradeLimitUp: 2
     upgradeEnum: 5
     statModType: 200

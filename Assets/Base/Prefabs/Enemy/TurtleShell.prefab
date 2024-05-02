@@ -1134,11 +1134,19 @@ MonoBehaviour:
   character: {fileID: 64766311757366526}
   controller: {fileID: 737672090467413326}
   hitController: {fileID: 1229148752862930689}
-  normalAttackAnimDescribe: Basic Hit
+  playerUpgrades: {fileID: 0}
+  normalAttackDescribe: Basic Hit
   normalAttackAnimTrigger: Attack1
   castSkillChance: 30
   Skills:
   - {fileID: 11400000, guid: 033a067bde81d324bb87bfecc2ddba3b, type: 2}
+  upgradeDatabase: {fileID: 11400000, guid: b213a458f7b5e194aacca8b39aa7f7de, type: 2}
+  seed: 0
+  m: 0
+  a: 0
+  c: 0
+  randomDrop: {fileID: 3471643304241853864, guid: 229fba16e88342d4a86117cdb43d6685,
+    type: 3}
 --- !u!195 &8137097179081481366
 NavMeshAgent:
   m_ObjectHideFlags: 0

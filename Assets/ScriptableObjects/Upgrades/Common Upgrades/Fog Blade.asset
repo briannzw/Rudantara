@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Fog Blade
   upgradeID: 11
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: 5fd50594014b70e48bd6993443d46b32, type: 3}
   upgradeDesc: Blade made of dense fog. Increase Attack but reduce Defense.
   rarity: 0
   stats:
   - upgradeValueStatic: 5
-    upgradeLimitDown: 3
-    upgradeLimitUp: 0
+    upgradeLimitDown: 1
+    upgradeLimitUp: 8
     upgradeEnum: 0
     statModType: 100
   - upgradeValueStatic: -2
-    upgradeLimitDown: 0
-    upgradeLimitUp: 0
+    upgradeLimitDown: -3
+    upgradeLimitUp: -1
     upgradeEnum: 1
     statModType: 100

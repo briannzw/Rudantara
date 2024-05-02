@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Fog Boots
   upgradeID: 12
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: e420c5bc93cb2604695a893500c897e3, type: 3}
   upgradeDesc: Boots made of dense fog. Increase Speed but decrease Defense.
   rarity: 0
   stats:
   - upgradeValueStatic: 5
+    upgradeLimitDown: 1
+    upgradeLimitUp: 8
     upgradeEnum: 2
     statModType: 100
   - upgradeValueStatic: -2
+    upgradeLimitDown: -3
+    upgradeLimitUp: -1
     upgradeEnum: 1
     statModType: 100

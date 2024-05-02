@@ -9,7 +9,7 @@ public class UpgradeUIManager : MonoBehaviour
 
     private void Start()
     {
-
+        this.gameObject.SetActive(false);
     }
 
     public void TriggerUI()

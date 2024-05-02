@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Soul Essence
   upgradeID: 9
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: b7d19ec039fa7b141bd165aa95496c75, type: 3}
   upgradeDesc: A small part of the many souls. Increase Health Regen by a certain
     percent.
   rarity: 0
   stats:
   - upgradeValueStatic: 1
+    upgradeLimitDown: 1
+    upgradeLimitUp: 2
     upgradeEnum: 4
     statModType: 200

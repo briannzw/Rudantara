@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Ruda Blade
   upgradeID: 0
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: 789e518168d493d4396ec984b1b5bcb3, type: 3}
   upgradeDesc: Blade imbued by the power of Ruda. Increase Attack.
   rarity: 0
   stats:
   - upgradeValueStatic: 3
+    upgradeLimitDown: 1
+    upgradeLimitUp: 5
     upgradeEnum: 0
     statModType: 100

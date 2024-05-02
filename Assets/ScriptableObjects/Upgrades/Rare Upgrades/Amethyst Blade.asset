@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Amethyst Blade
   upgradeID: 101
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: da3489a989b315644b2918cb9df15709, type: 3}
   upgradeDesc: Blade made from the stone of virtue. Increase Attack.
   rarity: 1
   stats:
   - upgradeValueStatic: 6
+    upgradeLimitDown: 6
+    upgradeLimitUp: 10
     upgradeEnum: 0
     statModType: 100

@@ -16,9 +16,11 @@ public class UpgradeRandomizer : MonoBehaviour
     public TMP_Text[] upgradeNameText;
     public TMP_Text[] upgradeDescText;
     public Image[] upgradeBgColor;
+    public Image[] upgradeImage;
     public Button[] upgradeButtons;
 
-    private bool seedInitialized = false; 
+    private bool seedInitialized = false;     
+    private bool upgradeSeedInitialized = false; 
 
 
     private List<Upgrade> availableUpgrades = new List<Upgrade>();
@@ -26,27 +28,29 @@ public class UpgradeRandomizer : MonoBehaviour
     private Dictionary<UpgradeRarity, int> rarityCounts = new Dictionary<UpgradeRarity, int>();
 
     // LCG parameters
-    long firstSeed = System.DateTime.Now.Ticks; 
-    [SerializeField] long seed;
-    [SerializeField] long m;
-    [SerializeField] long a;
-    [SerializeField] long c;
-    
+    [SerializeField] int firstSeed;
+    [SerializeField] int seed;
+    [SerializeField] int m;
+    [SerializeField] int a;
+    [SerializeField] int c; 
 
     void Start()
     {
-
-        StartUpgrade();
+        
     }
 
     public void TestTrigger()
     {
-        if (Input.GetKeyDown("space"))
+        /*if (Input.GetKeyDown("space"))
         {
             StartUpgrade();
-        }
+        }*/
     }
 
+    private int LCG(int a, int c, int m, int seed)
+    {
+        return (a * seed + c) % m;
+    }
     public void StartUpgrade()
     {
         availableUpgrades.Clear();
@@ -65,8 +69,7 @@ public class UpgradeRandomizer : MonoBehaviour
 
         foreach (var rarity in System.Enum.GetValues(typeof(UpgradeRarity)))
         {
-            rarityCounts[(UpgradeRarity)rarity] = 0;
-            
+            rarityCounts[(UpgradeRarity)rarity] = 0;    
         }
 
         foreach (var upgrade in availableUpgrades)
@@ -75,240 +78,116 @@ public class UpgradeRandomizer : MonoBehaviour
         }
     }
 
-/*
-   public void RandomizeUpgrades()
-    {
-    randomizedUpgrades.Clear();
-
-    if (rarityCounts[UpgradeRarity.Common] < 1 || rarityCounts[UpgradeRarity.Rare] < 1)
-    {
-        Debug.Log("Not enough common or rare upgrades available.");
-        return;
-    }
-
-    for (int i = 0; i < 3; i++)
-    {
-        UpgradeRarity selectedRarity = GetRandomRarityWithWeightedDistribution();
-        Upgrade selectedUpgrade = GetRandomUpgrade(selectedRarity);
-
-        while (randomizedUpgrades.Contains(selectedUpgrade))
-        {
-            selectedUpgrade = GetRandomUpgrade(selectedRarity);
-        }
-
-        randomizedUpgrades.Add(selectedUpgrade);
-    }
-}
-
-    private UpgradeRarity GetRandomRarityWithWeightedDistribution()
-    {
-        /*Amount Randomizer
-        int commonAmount = 0;
-        int rareAmount = 0;
-        int legendAmount = 0;
-    
-        foreach(var upgrades in upgradeDatabase.commonUpgrades)
-        {
-            commonAmount += 6;
-        }
-
-        foreach(var upgrades in upgradeDatabase.rareUpgrades)
-        {
-            rareAmount += 3;
-        }
-
-        foreach(var upgrades in upgradeDatabase.legendUpgrades)
-        {
-            legendAmount += 1;
-        }
-
-        int totalAmount = commonAmount + rareAmount + legendAmount;
-
-        int randVal = Random.Range(1, totalAmount);
-
-        if(randVal >= 1 && randVal <= commonAmount)
-        {
-            return UpgradeRarity.Common;
-        }
-        else if(randVal > commonAmount && randVal <= (commonAmount + rareAmount))
-        {
-            return UpgradeRarity.Rare;
-        }
-        else 
-        {
-            return UpgradeRarity.Legendary;
-        }
-        
-        
-        //|| Percent randomizer;
-        float randomValue = Random.Range(0f, 1f);
-        
-        // 60% chance for common, 30% chance for rare, 10% change for legend
-        if (randomValue <= 0.60f)
-        {
-            return UpgradeRarity.Common;
-        }
-        else if (randomValue > 0.60f && randomValue <= 1f)
-        {
-            return UpgradeRarity.Rare;
-        }
-        else
-        {
-            return UpgradeRarity.Common;
-        }
-    }
-*/
-    private Upgrade GetRandomUpgrade(UpgradeRarity rarity, long seed)
-    {
-         List<Upgrade> eligibleUpgrades = availableUpgrades.FindAll(upgrade => upgrade.rarity == rarity);
- 
-    if (eligibleUpgrades.Count > 0)
-    {
-        int randomIndex = (int)(seed % eligibleUpgrades.Count);
-        return eligibleUpgrades[randomIndex];
-    }
-
-        return null;
-    }
-
-
    private void RandomizeUpgradesWithLCG()
 {
     //LCG Constant
     m = availableUpgrades.Count; // Modulus
     a = upgradeDatabase.commonUpgrades.Count;    // Multiplier
     c = upgradeDatabase.rareUpgrades.Count; // Increment
-    Debug.Log("Modulus: "+m);
-    Debug.Log("Pengali: "+a);
-    Debug.Log("Penambah: "+c);
-    Debug.Log("First seed: "+firstSeed);
-    Debug.Log("Seed :"+seed);
 
-     for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
         if (!seedInitialized)
         {
-            seed = firstSeed;
+            firstSeed = (int)System.DateTime.Now.Ticks;
             seedInitialized = true;
-        }
-        else if (seed < 0) 
-        {
-            seed = 0; 
+            seed = LCG(a, c, m, firstSeed);
         }
         else
         {
-            seed = (a * seed + c) % m;
+            seed = LCG(a,c,m, seed);
+        }
+     
+        if(seed < 0){
+            seed = -seed;
         }
 
-        Debug.Log("result seed: " + seed);
+        Debug.Log("Seed ke-"+i+" pilih Upgrade :"+seed);
 
-        UpgradeRarity selectedRarity = GetRarityFromLCG(seed);
+        UpgradeRarity rarity = GetRarityFromLCG(seed);
 
-        Upgrade selectedUpgrade = GetRandomUpgrade(selectedRarity, seed);
-        
-        if (!seedInitialized)
-        {
-            seed = firstSeed;
-            seedInitialized = true;
-        }
-        else if (seed < 0) 
-        {
-            seed = 0; 
-        }
-        else
-        {
-            seed = (a * seed + c) % m;
-        }
-        
+        Upgrade selectedUpgrade = availableUpgrades[seed];
+
         while (randomizedUpgrades.Contains(selectedUpgrade))
         {
-            seed = (a * seed + c) % m;
-            selectedRarity = GetRarityFromLCG(seed);
-            selectedUpgrade = GetRandomUpgrade(selectedRarity, seed);
+            seed = LCG(a, c, m, seed);
+            Debug.Log("Seed ke-"+i+" pilih Upgrade ulang karena sama:"+seed);
+            selectedUpgrade = availableUpgrades[seed];
         }
 
         foreach (var stat in selectedUpgrade.stats){
-            if(selectedUpgrade.rarity == UpgradeRarity.Common){
-                if(stat.statModType == StatModType.Flat){
-                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
-                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
-                        stat.upgradeValueStatic = stat.upgradeLimitDown;
-                    }             
-                }
-                if(stat.statModType == StatModType.PercentAdd){
-                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
-                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
-                        stat.upgradeValueStatic = stat.upgradeLimitDown;
-                    }                
-                }
-            }
-             if(selectedUpgrade.rarity == UpgradeRarity.Rare){
-                if(stat.statModType == StatModType.Flat){
-                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
-                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
-                        stat.upgradeValueStatic = stat.upgradeLimitDown;
-                    }            
-                }
-                if(stat.statModType == StatModType.PercentAdd){
-                    stat.upgradeValueStatic = ((a * seed + c) % stat.upgradeLimitUp);   
-                     if(stat.upgradeValueStatic < stat.upgradeLimitDown){
-                        stat.upgradeValueStatic = stat.upgradeLimitDown;
-                    }              
-                }
-            }
+            seed = LCG(a, c, m, seed);
+            Debug.Log("Seed ke-"+i+" random stats :"+seed);
+            
+            if(stat.upgradeLimitUp >= 0){
+                stat.upgradeValueStatic = (seed % (stat.upgradeLimitUp+1));   
+            }                       
+        
+            if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                stat.upgradeValueStatic = stat.upgradeLimitDown;
+            } 
+
+            Debug.Log("selected upgrade :"+selectedUpgrade.upgradeName);
         }
 
+        
         randomizedUpgrades.Add(selectedUpgrade);
     }
 }
 
-private UpgradeRarity GetRarityFromLCG(long seed)
-{
-    float normalized = (float)seed % availableUpgrades.Count;
-
-    if (normalized <= upgradeDatabase.commonUpgrades.Count)
+    private UpgradeRarity GetRarityFromLCG(int seed)
     {
-        return UpgradeRarity.Common;
+        if (seed <= upgradeDatabase.commonUpgrades.Count)
+        {
+            return UpgradeRarity.Common;
+        }
+        else
+        {
+            return UpgradeRarity.Rare;
+        }
     }
-    else
-    {
-        return UpgradeRarity.Rare;
-    }
-}
-
 
     public void UpdateUI()
     {
         for (int i = 0; i < 3; i++)
         {
-            upgradeNameText[i].text = randomizedUpgrades[i].upgradeName;
-            
-            if (randomizedUpgrades[i].rarity == UpgradeRarity.Common)
+            if (i < randomizedUpgrades.Count)
             {
-                //upgradeNameText[i].color = new Color(0.545f, 0.761f, 0.808f); // Cyan color
-                 upgradeBgColor[i].color = new Color(0.545f, 0.761f, 0.808f);
-                 }
-            else if (randomizedUpgrades[i].rarity == UpgradeRarity.Rare)
-            {
-                //upgradeNameText[i].color = new Color(0.518f, 0.157f, 0.741f); // Purple color
-                upgradeBgColor[i].color = new Color(0.518f, 0.157f, 0.741f);
-                   }
+                upgradeNameText[i].text = randomizedUpgrades[i].upgradeName;
+
+                if (randomizedUpgrades[i].rarity == UpgradeRarity.Common)
+                {
+                    upgradeBgColor[i].color = new Color(0.545f, 0.761f, 0.808f);
+                }
+                else if (randomizedUpgrades[i].rarity == UpgradeRarity.Rare)
+                {
+                    upgradeBgColor[i].color = new Color(0.518f, 0.157f, 0.741f);
+                }
+                else
+                {
+                    upgradeBgColor[i].color = Color.white;
+                }
+                upgradeNameText[i].color = Color.white;
+                upgradeDescText[i].text = GetUpgradeDescription(randomizedUpgrades[i]);
+
+                upgradeImage[i].sprite = randomizedUpgrades[i].upgradeIcon;
+                upgradeImage[i].preserveAspect = true;
+
+                UpgradeButton upgradeButton = upgradeButtons[i].GetComponent<UpgradeButton>();
+                upgradeButton.SetUpgrade(randomizedUpgrades[i]);
+
+                upgradeButtons[i].interactable = true;
+
+                upgradeManager.AddSelectedUpgrade(randomizedUpgrades[i]);
+            }
             else
             {
-                //upgradeNameText[i].color = Color.white;
+                upgradeNameText[i].text = "";
                 upgradeBgColor[i].color = Color.white;
-                  }
-            upgradeNameText[i].color = Color.white;
-            upgradeDescText[i].text = GetUpgradeDescription(randomizedUpgrades[i]);
-            
-            UpgradeButton upgradeButton = upgradeButtons[i].GetComponent<UpgradeButton>();
-            upgradeButton.SetUpgrade(randomizedUpgrades[i]);
-
-            upgradeButtons[i].interactable = true;
-
-            foreach (var upgrade in randomizedUpgrades)
-            {
-                upgradeManager.AddSelectedUpgrade(upgrade);
+                upgradeNameText[i].color = Color.white;
+                upgradeDescText[i].text = "";
+                upgradeImage[i].sprite = null;
+                upgradeButtons[i].interactable = false;
             }
         }
     }

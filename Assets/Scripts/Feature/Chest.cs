@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour
 { Animator animator;
-    public UpgradeUIManager upgradeUIManager;
+    [SerializeField] private UpgradeUIManager upgradeUIManager;
     [SerializeField] private bool playerInRange = false; // Flag to track if the player is in range
 
     void Start()
     {
+        upgradeUIManager = FindObjectOfType<UpgradeUIManager>();
         animator = GetComponentInParent<Animator>();
     }
 

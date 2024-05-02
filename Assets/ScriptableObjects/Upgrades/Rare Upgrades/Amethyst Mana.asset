@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Amethyst Mana
   upgradeID: 105
-  upgradeIcon: {fileID: 0}
+  upgradeIcon: {fileID: 21300000, guid: 1c74d1dcff866ee48a68842355840c90, type: 3}
   upgradeDesc: Mana extracted from the stone of virtue. Increase Mana Regen.
   rarity: 1
   stats:
   - upgradeValueStatic: 3
+    upgradeLimitDown: 6
+    upgradeLimitUp: 10
     upgradeEnum: 5
     statModType: 100

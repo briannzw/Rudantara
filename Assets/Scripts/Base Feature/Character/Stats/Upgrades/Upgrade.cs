@@ -7,12 +7,12 @@ using Kryz.CharacterStats;
 public class Upgrade : ScriptableObject
 {
     public string upgradeName;
-   public int upgradeID;
-   public Sprite upgradeIcon;
+    public int upgradeID;
+    public Sprite upgradeIcon;
    
-   public string upgradeDesc;
+    public string upgradeDesc;
 
-   public UpgradeRarity rarity;
+    public UpgradeRarity rarity;
     public UpgradeStats[] stats;
 }
 
