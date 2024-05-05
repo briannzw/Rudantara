@@ -3868,7 +3868,7 @@ MonoBehaviour:
     Attack), choose one of your target:'
   personalityTargetHandler: {fileID: 1699518913}
   skillPrompt: '(key: skill, value: index) Here are your available skills, choose
-    one if necessary:'
+    to use one if needed:'
   skillDescribe: 
   skillTargetPrompt: '(key: skillTarget, value: index) If you chose to use your skill
     available above, choose one of your target:'

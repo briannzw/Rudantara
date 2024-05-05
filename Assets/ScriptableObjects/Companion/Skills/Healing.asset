@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 549da9bfc05e639459eaaa535989bbbe, type: 3}
   m_Name: Healing
   m_EditorClassIdentifier: 
-  Name: Heal Target
+  Name: Healing
   Trigger: Heal
   Loop: 0
   ManaRequired: 0
   Cooldown: 5
   AttackPercent: 100
+  VFX: {fileID: 0}
