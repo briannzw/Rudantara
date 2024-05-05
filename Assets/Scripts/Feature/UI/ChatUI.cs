@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChatUI : MonoBehaviour
 {
@@ -8,11 +10,15 @@ public class ChatUI : MonoBehaviour
     [SerializeField] private PersonalityAction actionModule;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text lineText;
+    [SerializeField] private Image lineEmotionImage;
 
     [Header("Parameters")]
     [SerializeField] private float showDuration = 3f;
     [SerializeField] private float hideTransition = 1.5f;
     [SerializeField] private float showTransition = .2f;
+
+    [Header("Emotion")]
+    [SerializeField] private List<Sprite> emotionSprites = new();
 
     private void Awake()
     {
@@ -21,13 +27,15 @@ public class ChatUI : MonoBehaviour
 
     private void Start()
     {
-        actionModule.OnResponseReceived += (value) => ShowText(value.Line);
+        actionModule.OnResponseReceived += (value) => ShowText(value.Line, value.EmotionIndex);
     }
 
-    public void ShowText(string text)
+    public void ShowText(string text, int emotion)
     {
+        if (string.IsNullOrEmpty(text)) return;
         StopAllCoroutines();
         lineText.text = text;
+        lineEmotionImage.sprite = emotionSprites[emotion];
         StartCoroutine(SetAlpha(1));
     }
 

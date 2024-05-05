@@ -4,6 +4,7 @@ using UnityEngine;
 public class Personality : MonoBehaviour
 {
     private Describable me;
+    public string Name => me.Name;
     [SerializeField, TextArea] private string characterDescription;
     [SerializeField] private BigFivePersonality personalityTraits;
 
@@ -12,6 +13,9 @@ public class Personality : MonoBehaviour
 
     // Memory
     private MemoryPersistence memory;
+
+    // State Controller
+    [SerializeField] private PersonalityStateController stateController;
 
     private void Awake()
     {
@@ -28,22 +32,29 @@ public class Personality : MonoBehaviour
         memory.Insert(_report);
     }
 
+    public void EnemyDetected(Character chara) => stateController.AddEnemy(chara);
+    public void EnemyRemoved(Character chara) => stateController.RemoveEnemy(chara);
+    public bool IsEnemyDetected => stateController.IsEnemyDetected;
+
     public void Forget()
     {
         memory.Reset();
     }
 
-    public string CreatePrompt()
+    public string CreatePrompt(string addPrev = null)
     {
-        string prompt = characterDescription + "\n\n" + "You are a person that have following personality that is based on the Big Five Personality Traits (scale from 1 to 100):\n";
+        string prompt = characterDescription + "\n\n" + "You are an adventurer that have following personality that is based on the Big Five Personality Traits (scales from 0 to 100):\n";
 
         prompt += personalityTraits.Describe() + "\n\n";
+
+        prompt += "Here is your response and its result on past action, please utilize this information when choosing actions:\n";
+        prompt += "Previous memories:\n";
+        prompt += memory.Reflect();
+        if(addPrev != null) prompt += addPrev + "\n\n";
 
         // Memory persistence
         prompt += "Here are your memories after your past action and its frequency:\n";
         prompt += memory.Describe();
-
-        // Combat values (health, weapon power in scale, etc.)
 
         return prompt;
     }

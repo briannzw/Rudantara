@@ -116,7 +116,7 @@ public class EnemyCombatController : MonoBehaviour
         };
 
         // Died
-        character.OnCharacterDie += () =>
+        character.OnCharacterDie += (Character chara) =>
         {
             animator.SetBool("Dead", true);
             GetComponent<Collider>().enabled = false;
@@ -175,6 +175,7 @@ public class EnemyCombatController : MonoBehaviour
             yield return null;
         }
 
+        describable.OnEvent?.Invoke(describable.Name + " died and will be respawned");
         // Destroy(gameObject);
         GetComponent<SpawnObject>().Release();
     }

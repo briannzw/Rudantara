@@ -138,18 +138,27 @@ public class Vision : MonoBehaviour
 
     private void CheckVision(GameObject obj, Describable describable)
     {
-        if (!IsObscured(obj))
+        // Prevent too realistic vision, making gameplay not fun
+        //if (!IsObscured(obj))
+        //{
+        seen.Add(describable);
+        owner.DescribeVisual("You saw [" + describable.Name + "]");
+        owner.DescribeVisual(describable.InitialReport);
+        describable.OnEvent += owner.DescribeVisual;
+
+        if (!describable.CompareTag("Enemy")) return;
+
+        Character chara = obj.GetComponent<Character>();
+        if (chara != null)
         {
-            seen.Add(describable);
-            owner.DescribeVisual("You saw [" + describable.Name + "]");
-            owner.DescribeVisual(describable.InitialReport);
-            describable.OnEvent += owner.DescribeVisual;
+            chara.OnCharacterDie += OnCharaDied;
+            owner.EnemyDetected(chara);
         }
+        //}
     }
 
     private bool IsObscured(GameObject other)
     {
-        return false;
         Vector3 dir = (other.transform.position - transform.position).normalized;
         float distance = (other.transform.position - transform.position).magnitude;
 
@@ -175,7 +184,9 @@ public class Vision : MonoBehaviour
             if (seen.Contains(describable)) return;
 
             if (other.GetComponent<Rigidbody>() != null)
+            {
                 CheckVision(other.gameObject, describable);
+            }
             else
             {
                 seen.Add(describable);
@@ -191,8 +202,8 @@ public class Vision : MonoBehaviour
         Describable describable = null;
 
         foreach (var tag in viewTags)
-        {
             if (other.CompareTag(tag))
+        {
                 describable = other.GetComponentInChildren<Describable>();
         }
 
@@ -203,7 +214,15 @@ public class Vision : MonoBehaviour
                 seen.Remove(describable);
                 //owner.DescribeVisual("You can no longer see [" + describable.Name + "]");
                 describable.OnEvent -= owner.DescribeVisual;
+
+                if (describable.CompareTag("Enemy")) owner.EnemyRemoved(describable.GetComponent<Character>());
             }
         }
+    }
+
+    private void OnCharaDied(Character chara)
+    {
+        owner.EnemyRemoved(chara);
+        chara.OnCharacterDie -= OnCharaDied;
     }
 }

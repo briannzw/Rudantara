@@ -14,11 +14,6 @@ public class GASSender : MonoBehaviour
     [Header("Output")]
     [SerializeField] private TMP_Text responseText;
 
-    private void Start()
-    {
-        //StartCoroutine(CallGoogleAppsScript());
-    }
-
     public IEnumerator CallGoogleAppsScript(IRequestResponse prompter, string prompt)
     {
         string url = $"https://script.google.com/macros/s/{deployId}/exec?prompt=" + UnityWebRequest.EscapeURL(startingPromptText + '\n' + prompt);
@@ -32,12 +27,22 @@ public class GASSender : MonoBehaviour
         }
         else
         {
-            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.downloadHandler.text);
-            Debug.Log("Response: " + response["answer"]);
+            Dictionary<string, string> response = null;
+            try
+            {
+                response = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.downloadHandler.text);
 
-            if (responseText) responseText.text = response["answer"];
+                Debug.Log("Response: " + response["answer"]);
 
-            prompter.Receive(response["answer"]);
+                if (responseText) responseText.text = response["answer"];
+
+                prompter.Receive(response["answer"]);
+            }
+            catch(System.Exception ex)
+            {
+                Debug.LogWarning("ERROR: Failed to receive Response (" + ex.Message + ")");
+                prompter.Receive(null);
+            }
         }
     }
 

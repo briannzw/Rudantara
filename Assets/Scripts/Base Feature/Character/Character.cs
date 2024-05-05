@@ -20,10 +20,10 @@ public class Character : MonoBehaviour
 
     #region Events
     public Action OnCharacterHurt;
-    public Action OnCharacterDie;
     public Action OnCharacterStatsChanged;
     public Action OnCharacterDynamicStatsChanged;
 
+    public Action<Character> OnCharacterDie;
     public Action<Character> OnCharacterKill;
     #endregion
 
@@ -108,7 +108,7 @@ public class Character : MonoBehaviour
             // Die
             if (DynamicStats[DynamicStatEnum.Health].CurrentValue <= 0f && !isDead)
             {
-                OnCharacterDie?.Invoke();
+                OnCharacterDie?.Invoke(this);
                 isDead = true;
             }
         }
