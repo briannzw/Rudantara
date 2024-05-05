@@ -137,8 +137,16 @@ public class UpgradeRandomizer : MonoBehaviour
                 }                       
                 stat.upgradeValueStatic = statSeed;
 
-                if(stat.upgradeValueStatic < stat.upgradeLimitDown){
-                    stat.upgradeValueStatic += stat.upgradeLimitDown;
+                if(stat.upgradeLimitDown > 0){
+                    if(stat.upgradeValueStatic < stat.upgradeLimitDown){
+                        stat.upgradeValueStatic += stat.upgradeLimitDown;
+                    }
+                }
+                else if (stat.upgradeLimitDown < 0){
+                    if(stat.upgradeValueStatic > stat.upgradeLimitUp){
+                        stat.upgradeValueStatic = stat.upgradeValueStatic % stat.upgradeLimitDown;
+                        stat.upgradeValueStatic += stat.upgradeLimitUp;
+                    }
                 } 
             }
 

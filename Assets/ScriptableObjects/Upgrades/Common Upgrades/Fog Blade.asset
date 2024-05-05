@@ -23,8 +23,8 @@ MonoBehaviour:
     upgradeLimitUp: 8
     upgradeEnum: 0
     statModType: 100
-  - upgradeValueStatic: -2
-    upgradeLimitDown: -3
-    upgradeLimitUp: -1
+  - upgradeValueStatic: 2
+    upgradeLimitDown: -4
+    upgradeLimitUp: -2
     upgradeEnum: 1
     statModType: 100

@@ -7,12 +7,13 @@ using Kryz.CharacterStats;
 public class UpgradeButton : MonoBehaviour
 {
     public UpgradeRandomizer upgradeRandomizer;
+    public UpgradeOwnedUI upgradeOwnedUI;
     private GraphicRaycaster canvasRaycast;
     public Character character;
 
     public Image hoverImage;
     private UpgradeManager upgradeManager;
-    private UpgradeList upgradeList;
+    [SerializeField] private UpgradeList upgradeList;
     private Upgrade upgrade;
     public static int id = 1;
     private RectTransform rectTransform;
@@ -53,6 +54,7 @@ public class UpgradeButton : MonoBehaviour
             Invoke(nameof(SetFalseUpgradeCanvas), 1f);
 
             Invoke(nameof(EnableCanvasAfterDelay), 1f);
+            upgradeOwnedUI.UpdateBuffDisplay(UpgradeList.Instance.chosenUpgrades);
 
             Time.timeScale = 1f;
         }
