@@ -30,6 +30,10 @@ public class AgentController : MonoBehaviour
         if(!describable) describable = GetComponentInChildren<Describable>();
 
         agent.enabled = false;
+    }
+
+    private void Start()
+    {
         DungeonGenerator.Instance.OnDungeonComplete += () => agent.enabled = true;
     }
 

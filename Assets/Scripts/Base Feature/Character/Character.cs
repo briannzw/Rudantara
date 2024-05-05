@@ -15,6 +15,9 @@ public class Character : MonoBehaviour
     [Cinemachine.TagField]
     public List<string> EnemyTags = new();
 
+    [Header("Misc")]
+    public Sprite characterImage;
+
     public bool IsDead { get => isDead; }
     private bool isDead = false;
 
@@ -53,9 +56,12 @@ public class Character : MonoBehaviour
 
     public void Initialize(CharacterLeveling charLevel)
     {
+        this.charLevel = charLevel;
         DynamicStats = charLevel.InitialDynamicStats();
         Stats = charLevel.InitialStats();
     }
+
+    public int GetLevel() => charLevel.CurrentLevel;
 
     public void ResetDynamicValue()
     {

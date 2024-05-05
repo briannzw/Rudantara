@@ -40,6 +40,7 @@ public class CharacterLeveling : MonoBehaviour
     private void Awake()
     {
         character = GetComponent<Character>();
+        OnEnable();
     }
 
     private void Start()
