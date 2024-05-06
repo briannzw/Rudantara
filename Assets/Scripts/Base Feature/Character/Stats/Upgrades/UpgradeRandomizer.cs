@@ -12,7 +12,7 @@ public class UpgradeRandomizer : MonoBehaviour
 {
     public static UpgradeRandomizer Instance { get; private set; }
     public UpgradeDatabase upgradeDatabase;
-    public UpgradeManager upgradeManager;
+    [SerializeField] private UpgradeManager upgradeManager;
     public TMP_Text[] upgradeNameText;
     public TMP_Text[] upgradeDescText;
     public Image[] upgradeBgColor;
@@ -42,6 +42,7 @@ public class UpgradeRandomizer : MonoBehaviour
 
     void Start()
     {
+        upgradeManager = FindObjectOfType<UpgradeManager>();
         currentPlayerLevel = playerLevel.CurrentLevel;
     }
 
