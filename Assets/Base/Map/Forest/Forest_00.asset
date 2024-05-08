@@ -78,9 +78,9 @@ MonoBehaviour:
     useLoader: 1
     loaderAngle: 0
     deltaLoaderPos: {x: 0, y: 0, z: 0}
-    useExtra: 0
+    useExtra: 1
     iterateExtra: 0
-    extra: {fileID: 0}
+    extra: {fileID: 7400389541071336830, guid: f91c49051e0a49b49aad50e4128bca16, type: 3}
     extraPos: {x: 24, y: 0, z: 24}
     rooms: 1
     shape: {fileID: 11400000, guid: 294ba84c357a2374299821d20d65bae7, type: 2}

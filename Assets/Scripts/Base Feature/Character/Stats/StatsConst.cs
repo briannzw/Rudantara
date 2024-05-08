@@ -21,5 +21,6 @@ public static class StatsConst
 
     #region Exp
     public const float KILL_EXP_MODIFIER = .35f;
+    public const float SHARED_EXP_MODIFIER = .5f;
     #endregion
 }

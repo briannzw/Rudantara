@@ -1,12 +1,15 @@
 using AYellowpaper.SerializedCollections;
 using Kryz.CharacterStats;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterLeveling : MonoBehaviour
 {
     [Header("References")]
     private Character character;
+    [SerializeField] private List<CharacterLeveling> SharedEXP;
 
     [Header("Parameters")]
     [SerializeField] private int expPerSeconds;
@@ -18,9 +21,24 @@ public class CharacterLeveling : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private CharacterStatLevelPattern statsPattern;
 
+    public Action OnExperienceChanged;
+    public bool ShareEXP = true;
+
     public int CurrentLevel { get; private set; }
-    private int expNeeded => Mathf.FloorToInt(expPerLevel.Evaluate(CurrentLevel + 1));
-    public float Experiences { get; private set; }
+    public int ExpNeeded => Mathf.FloorToInt(expPerLevel.Evaluate(CurrentLevel + 1));
+    public float Experiences { get => experiences; private set { experiences = value; OnExperienceChanged?.Invoke(); } }
+    public float TotalExperiences
+    { 
+        get 
+        {
+            float temp = 0;
+            for(int i = 2; i < CurrentLevel; i++) temp += expPerLevel.Evaluate(i);
+            temp += Experiences;
+            return temp;
+        }
+    }
+
+    private float experiences;
 
     // Enemy Specific
     private AgentController enemyController;
@@ -30,9 +48,47 @@ public class CharacterLeveling : MonoBehaviour
 
     private void OnEnable()
     {
-        CurrentLevel = 1;
         Experiences = 0;
+        ShareEXP = true;
+
+        StartCoroutine(ExpPerSecond());
+
+        character.OnCharacterKill += CharaKill;
+
+        character.OnCharacterDie += (Character chara) => StopAllCoroutines();
+
+        // Enemy only
+        if (GetComponent<AgentController>())
+            enemyController = GetComponent<AgentController>();
+    }
+
+    private void OnDisable()
+    {
+        character.OnCharacterKill -= CharaKill;
+        character.OnCharacterDie -= (Character chara) => StopAllCoroutines();
+    }
+
+    public void Initialize(int level, float exp = 0)
+    {
+        CurrentLevel = level;
+        Experiences = exp;
         // Assign stats to character based on level
+        character.Initialize(this);
+        character.ResetDynamicValue();
+    }
+
+    public void SetInitialLevel(float exp)
+    {
+        Experiences = exp;
+        for(int i = 2; i < 100; i++)
+        {
+            if(Experiences >= ExpNeeded)
+            {
+                Experiences -= ExpNeeded;
+                CurrentLevel++;
+            }
+        }
+
         character.Initialize(this);
         character.ResetDynamicValue();
     }
@@ -40,24 +96,10 @@ public class CharacterLeveling : MonoBehaviour
     private void Awake()
     {
         character = GetComponent<Character>();
-        OnEnable();
-    }
-
-    private void Start()
-    {
-        StartCoroutine(ExpPerSecond());
-
-        character.OnCharacterKill += (chara) =>
-        {
-            var charLevel = chara.GetComponent<CharacterLeveling>();
-            if (charLevel) Experiences += Mathf.RoundToInt(charLevel.Experiences * StatsConst.KILL_EXP_MODIFIER * character.CheckStat(StatEnum.ExpMultiplier));
-        };
-
-        character.OnCharacterDie += (Character chara) => StopAllCoroutines();
-
-        // Enemy only
-        if(GetComponent<AgentController>())
-            enemyController = GetComponent<AgentController>();
+        CurrentLevel = 1;
+        Experiences = 0;
+        ShareEXP = true;
+        Initialize(CurrentLevel);
     }
 
     private IEnumerator ExpPerSecond()
@@ -69,11 +111,11 @@ public class CharacterLeveling : MonoBehaviour
             if (enemyController && enemyController.IsTargetInRange) Experiences += expPerSecondsCombat * character.CheckStat(StatEnum.ExpMultiplier);
             else Experiences += expPerSeconds * character.CheckStat(StatEnum.ExpMultiplier);
 
-            if (CurrentLevel < 100 && Experiences >= expNeeded)
+            if (CurrentLevel < 100 && Experiences >= ExpNeeded)
             {
                 // Level Up
+                Experiences -= ExpNeeded;
                 CurrentLevel++;
-                Experiences = 0;
 
                 if (levelUpVFX)
                 {
@@ -93,6 +135,21 @@ public class CharacterLeveling : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void CharaKill(Character chara)
+    {
+        var charLevel = chara.GetComponent<CharacterLeveling>();
+        if (charLevel)
+        {
+            Experiences += charLevel.CurrentLevel * StatsConst.KILL_EXP_MODIFIER * character.CheckStat(StatEnum.ExpMultiplier);
+            if (ShareEXP) foreach (var leveling in SharedEXP) leveling.ReceiveSharedEXP(charLevel);
+        }
+    }
+
+    public void ReceiveSharedEXP(CharacterLeveling charLevel)
+    {
+        Experiences += charLevel.CurrentLevel * StatsConst.KILL_EXP_MODIFIER * character.CheckStat(StatEnum.ExpMultiplier) * StatsConst.SHARED_EXP_MODIFIER;
     }
 
     // Initializer

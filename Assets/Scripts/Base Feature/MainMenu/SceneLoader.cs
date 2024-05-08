@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,5 +12,11 @@ public class SceneLoader : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.saveManager.Save();
     }
 }

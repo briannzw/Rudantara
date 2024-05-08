@@ -64,16 +64,23 @@ public class EnemySpawner : MonoBehaviour
                     if (desc.Name == spawnObject.GetComponent<Describable>().Name)
                         desc.Name += " " + poolManager.Pools[spawnObject].CountActive.ToString();
 
+                    Character chara = go.GetComponent<Character>();
                     // Check Tiny Spawn
                     if (Random.Range(0, 100) < tinySpawnChance)
                     {
                         go.transform.localScale = Vector3.one * .5f;
 
-                        Character chara = go.GetComponent<Character>();
                         chara.ModifyStat(DynamicStatEnum.Health, new Kryz.CharacterStats.StatModifier(-.4f, Kryz.CharacterStats.StatModType.PercentMult));
                         chara.ModifyStat(StatEnum.Speed, new Kryz.CharacterStats.StatModifier(.5f, Kryz.CharacterStats.StatModType.PercentMult));
                         go.GetComponent<AgentController>().StopDistance = StatsConst.STOPPING_DISTANCE / 2f;
                     }
+
+                    // Set level
+                    var charLevel = go.GetComponent<CharacterLeveling>();
+                    if (charLevel != null) charLevel.Initialize(GameManager.Instance.LevelManager.CurrentEnemyBaseLevel);
+
+                    // Register to Level
+                    GameManager.Instance.LevelManager.RegisterEnemy(chara);
 
                     // VFX
                     GameObject vfx = Instantiate(spawnEffect, hit.position + spawnOffset, Quaternion.identity);
