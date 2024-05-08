@@ -41,12 +41,11 @@ public class LevelManager : MonoBehaviour
         playerLeveling.GetComponent<Character>().OnCharacterDie += (Character chara) =>
         {
             playerDied = true;
-            if (companionDied) GameOver();
+            GameOver();
         };
         companionLeveling.GetComponent<Character>().OnCharacterDie += (Character chara) =>
         {
             companionDied = true;
-            if (playerDied) GameOver();
         };
     }
 
