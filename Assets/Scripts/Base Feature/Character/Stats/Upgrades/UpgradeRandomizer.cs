@@ -153,6 +153,9 @@ public class UpgradeRandomizer : MonoBehaviour
 
             Debug.Log("selected upgrade :"+selectedUpgrade.upgradeName); 
             randomizedUpgrades.Add(selectedUpgrade);
+            foreach (var stat in selectedUpgrade.stats){
+               Debug.Log("Selected upgrade stats of "+selectedUpgrade.upgradeName+": "+stat.upgradeValueStatic);
+            }
         }
     }
 

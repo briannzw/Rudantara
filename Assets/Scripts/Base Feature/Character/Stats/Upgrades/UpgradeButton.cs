@@ -7,9 +7,9 @@ using Kryz.CharacterStats;
 public class UpgradeButton : MonoBehaviour
 {
     public UpgradeRandomizer upgradeRandomizer;
-    public UpgradeOwnedUI upgradeOwnedUI;
+    [SerializeField] private UpgradeOwnedUI upgradeOwnedUI;
     private GraphicRaycaster canvasRaycast;
-    public Character character;
+     [SerializeField] private Character character;
 
     public Image hoverImage;
     private UpgradeManager upgradeManager;
@@ -25,6 +25,7 @@ public class UpgradeButton : MonoBehaviour
         upgradeManager = FindObjectOfType<UpgradeManager>();
         rectTransform = GetComponent<RectTransform>();
         upgradeList = FindObjectOfType<UpgradeList>();
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
 
         canvasRaycast= GetComponentInParent<GraphicRaycaster>();
 
@@ -45,8 +46,7 @@ public class UpgradeButton : MonoBehaviour
         if (upgrade != null)
         {
             upgradeList.chosenUpgrades.Add(upgrade);
-            for(int i = 0;i<upgrade.stats.Length;i++ ){
-                character.ModifyStat(upgrade.stats[i].upgradeEnum, new StatModifier(upgrade.stats[i].upgradeValueStatic, upgrade.stats[i].statModType));
+            for(int i = 0;i<upgrade.stats.Length;i++ ){                character.ModifyStat(upgrade.stats[i].upgradeEnum, new StatModifier(upgrade.stats[i].upgradeValueStatic, upgrade.stats[i].statModType));
             }            
             
             canvasRaycast.enabled = false;
