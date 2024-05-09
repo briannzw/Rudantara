@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ public class BossHUD : MonoBehaviour
         {
             healthBar.SetActive(true);
             barImage.fillAmount = bossChara.CheckStat(DynamicStatEnum.Health) / bossChara.CheckStatMax(DynamicStatEnum.Health);
-            hpText.text = bossChara.CheckStat(DynamicStatEnum.Health) + " / " + bossChara.CheckStatMax(DynamicStatEnum.Health);
+            hpText.text = Mathf.RoundToInt(bossChara.CheckStat(DynamicStatEnum.Health)) + " / " + Mathf.RoundToInt(bossChara.CheckStatMax(DynamicStatEnum.Health));
             levelText.text = "LV. " + bossChara.Level.ToString();
         };
 

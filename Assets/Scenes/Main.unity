@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4377,6 +4377,12 @@ Transform:
   - {fileID: 1170554485}
   m_Father: {fileID: 1846203159}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1302949223 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 57468593614674031, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1337509847}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1312391513
 GameObject:
   m_ObjectHideFlags: 0
@@ -4861,6 +4867,51 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1302949223}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1302949223}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942184048695887704, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4115519549317022208, guid: f9c6cad83d246aa478b7588fbb7bd5a6,
         type: 3}
@@ -5424,7 +5475,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1337509847}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1302949223}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9702e52286d9d914ebd7d5ef86bff981, type: 3}
