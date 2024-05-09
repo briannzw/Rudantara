@@ -56,6 +56,7 @@ public class UpgradeButton : MonoBehaviour
             Invoke(nameof(EnableCanvasAfterDelay), 1f);
             upgradeOwnedUI.UpdateBuffDisplay(UpgradeList.Instance.chosenUpgrades);
 
+            InputManager.ToggleActionMap(InputManager.PlayerAction.Gameplay);
             Time.timeScale = 1f;
         }
     }

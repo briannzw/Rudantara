@@ -72,6 +72,7 @@ public class EnemySpawner : MonoBehaviour
 
                         chara.ModifyStat(DynamicStatEnum.Health, new Kryz.CharacterStats.StatModifier(-.4f, Kryz.CharacterStats.StatModType.PercentMult));
                         chara.ModifyStat(StatEnum.Speed, new Kryz.CharacterStats.StatModifier(.5f, Kryz.CharacterStats.StatModType.PercentMult));
+                        chara.ModifyStat(StatEnum.Attack, new Kryz.CharacterStats.StatModifier(1.25f, Kryz.CharacterStats.StatModType.PercentMult));
                         go.GetComponent<AgentController>().StopDistance = StatsConst.STOPPING_DISTANCE / 2f;
                     }
 

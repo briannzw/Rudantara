@@ -98,6 +98,7 @@ MonoBehaviour:
   instructionTitles:
   - Welcome, Playtesters!
   - What to Expect
+  - Regarding Companion
   - How to Play
   - How to Play (2)
   - Power Up!
@@ -113,6 +114,9 @@ MonoBehaviour:
     : \nBeat the monsters spawn in the map to level up your characters. You'll be
     accompanied by a companion.\nEnemies will drop treasure chests to power up your
     character with Upgrades."
+  - Companion uses a Large Language Model (like ChatGPT) to respond to its surroundings,
+    so there's some delay between requests using the internet. It might affect how
+    the gameplay feels.
   - 'Movement
 
     Press [WASD] to move relative in 3D space
@@ -486,7 +490,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Thank You!
+  m_text: Regarding Companion
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1042,8 +1046,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Thank you again for your participation! Your feedback is essential to making
-    this final project the best it can be.
+  m_text: Companion uses a Large Language Model (like ChatGPT) to respond to its
+    surroundings, so there's some delay between requests using the internet. It might
+    affect how the gameplay feels.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

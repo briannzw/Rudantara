@@ -49,11 +49,11 @@ MonoBehaviour:
     type: 3}
   spawnEffect: {fileID: 3693895501849715683, guid: 8b9ddcd8584540b43a3aec887388f0a6,
     type: 3}
-  spawnRate: 20
-  spawnCount: 3
+  spawnRate: 5
+  spawnCount: 1
   spawnRadius: 40
   spawnOffset: {x: 0, y: 0, z: 0}
-  maxSpawn: 50
+  maxSpawn: 15
   tinySpawnChance: 15
 --- !u!1 &5751776549931725925
 GameObject:

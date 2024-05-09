@@ -117,6 +117,7 @@ public class Character : MonoBehaviour
             if (DynamicStats[DynamicStatEnum.Health].CurrentValue <= 0f && !isDead)
             {
                 OnCharacterDie?.Invoke(this);
+                CancelInvoke();
                 isDead = true;
             }
         }

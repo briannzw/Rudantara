@@ -222,9 +222,9 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         result.New();
     }
 
-#if UNITY_EDITOR
     int state = -1;
     int actionIndex = -1;
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (state == -1 || actionIndex == -1) return;

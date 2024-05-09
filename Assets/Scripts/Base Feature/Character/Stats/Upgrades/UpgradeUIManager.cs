@@ -17,5 +17,6 @@ public class UpgradeUIManager : MonoBehaviour
         upgradeRandomizer.gameObject.SetActive(true);
         upgradeRandomizer.StartUpgrade();    
         Time.timeScale = 0f;
+        InputManager.ToggleActionMap(InputManager.PlayerAction.Panel);
     }
 }
