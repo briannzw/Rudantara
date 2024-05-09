@@ -126,16 +126,18 @@ public class UpgradeRandomizer : MonoBehaviour
             }*/
 
             foreach (var stat in selectedUpgrade.stats){
+                if(statSeed < 0){
+                    statSeed = -statSeed;
+                }
                 Debug.Log("Seed ke-"+i+" random stats :"+statSeed);
                 
-                if(stat.upgradeLimitUp >= 0){
-                    if(!statSeedInitialized){
-                        statSeed = LCG(a, c, (stat.upgradeLimitUp+1), seed);
-                    }
-                    else{
-                        statSeed = LCG(a, c, (stat.upgradeLimitUp+1), statSeed);
-                    }
-                }                       
+                if(!statSeedInitialized){
+                    statSeed = LCG(a, c, (stat.upgradeLimitUp+1), seed);
+                }
+                else{
+                    statSeed = LCG(a, c, (stat.upgradeLimitUp+1), statSeed);
+                }
+                     
                 stat.upgradeValueStatic = statSeed;
 
                 if(stat.upgradeLimitDown > 0){
@@ -149,6 +151,10 @@ public class UpgradeRandomizer : MonoBehaviour
                         stat.upgradeValueStatic += stat.upgradeLimitUp;
                     }
                 } 
+
+                if (stat.statModType == StatModType.PercentAdd){
+                    stat.upgradeValueStatic = stat.upgradeValueStatic / 100;
+                }
             }
 
             Debug.Log("selected upgrade :"+selectedUpgrade.upgradeName); 
