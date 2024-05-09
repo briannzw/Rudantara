@@ -11,10 +11,15 @@ public class MainMenu : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private Button continueButton;
     [SerializeField] private TMP_Text continueIterationText;
+    [SerializeField] private GameObject playtestInstructionPanel;
 
     private void Awake()
     {
-        if (!saveManager.CheckDataExists()) NewGame();
+        if (!saveManager.CheckDataExists())
+        {
+            NewGame();
+            playtestInstructionPanel.SetActive(true);
+        }
         saveManager.Load();
     }
 
