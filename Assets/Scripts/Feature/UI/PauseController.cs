@@ -15,6 +15,7 @@ public class PauseController : PlayerInputControl
     [Header("Child References")]
     [SerializeField] private StatusUIController statusUIController;
     [SerializeField] private UpgradeOwnedUI ownedUpgradeUIController;
+    [SerializeField] private GameObject instructionPanel;
 
     private Coroutine textAnim;
 
@@ -50,6 +51,11 @@ public class PauseController : PlayerInputControl
         if (ownedUpgradeUIController.gameObject.activeSelf)
         {
             ownedUpgradeUIController.Close();
+            return;
+        }
+        if (instructionPanel.activeSelf)
+        {
+            instructionPanel.SetActive(false);
             return;
         }
 
