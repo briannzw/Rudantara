@@ -34,7 +34,7 @@ public class Personality : MonoBehaviour
 
     public void EnemyDetected(Character chara) => stateController.AddEnemy(chara);
     public void EnemyRemoved(Character chara) => stateController.RemoveEnemy(chara);
-    public bool IsEnemyDetected => stateController.IsEnemyDetected;
+    public bool IsEnemyDetected => stateController.IsEnemyDetected();
 
     public void Forget()
     {

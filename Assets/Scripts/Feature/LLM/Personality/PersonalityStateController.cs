@@ -7,7 +7,21 @@ public class PersonalityStateController : MonoBehaviour
     [SerializeField] private PersonalityAction actionModule;
 
     private HashSet<Character> enemiesDetected = new();
-    public bool IsEnemyDetected => enemiesDetected.Count > 0;
+    public bool IsEnemyDetected()
+    {
+        bool IsEnemiesAlive = false;
+
+        foreach(var enemy in enemiesDetected)
+        {
+            if (!enemy.IsDead)
+            {
+                IsEnemiesAlive = true;
+                break;
+            }
+        }
+
+        return IsEnemiesAlive;
+    }
 
     private bool prevState = false;
 
@@ -21,11 +35,11 @@ public class PersonalityStateController : MonoBehaviour
         if (!enemiesDetected.Contains(chara)) enemiesDetected.Add(chara);
 
         // Every Enemy detected/undetected
-        if (prevState != IsEnemyDetected)
+        if (prevState != IsEnemyDetected())
         {
             actionModule.CreatePrompt();
         }
-        prevState = IsEnemyDetected;
+        prevState = IsEnemyDetected();
     }
 
     public void RemoveEnemy(Character chara) => enemiesDetected.Remove(chara);

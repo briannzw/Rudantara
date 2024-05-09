@@ -4136,6 +4136,7 @@ MonoBehaviour:
   - Protect your partner by luring enemies far from your partner
   - Seek protection from your partner
   - Flee from the battle to the safe place
+  - Do nothing (exit combat state)
   alternativeActionPrompt: '(key: alternative, value: index) If you chose first action
     (1. Focus Attack), prioritize other one action below based on your personality:'
   targetPrompt: '(key: target, value: string) If you chose first action (1. Focus

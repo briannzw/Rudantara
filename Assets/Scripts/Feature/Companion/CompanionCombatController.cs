@@ -151,6 +151,11 @@ public class CompanionCombatController : MonoBehaviour
                 currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
+            // Do nothing (exit combat state)
+            case 6:
+                controller.SetTarget(null);
+                currentState = CompanionCombatState.Idle;
+                break;
         }
 
         if(actionResponse.SkillIndex != -1)

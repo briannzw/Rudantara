@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -215,7 +216,10 @@ public class Vision : MonoBehaviour
                 //owner.DescribeVisual("You can no longer see [" + describable.Name + "]");
                 describable.OnEvent -= owner.DescribeVisual;
 
-                if (describable.CompareTag("Enemy")) owner.EnemyRemoved(describable.GetComponent<Character>());
+                if (describable.CompareTag("Enemy"))
+                {
+                    describable.GetComponent<Character>().OnCharacterDie -= OnCharaDied;
+                }
             }
         }
     }
