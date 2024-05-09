@@ -61,7 +61,9 @@ public class Character : MonoBehaviour
         Stats = charLevel.InitialStats();
     }
 
-    public int GetLevel() => charLevel.CurrentLevel;
+    public int Level => charLevel.CurrentLevel;
+    public float EXP => charLevel.Experiences;
+    public float EXPNeeded => charLevel.ExpNeeded;
 
     public void ResetDynamicValue()
     {

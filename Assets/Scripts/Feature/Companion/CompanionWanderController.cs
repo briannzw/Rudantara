@@ -72,6 +72,8 @@ public class CompanionWanderController : MonoBehaviour
     Vector3 randomPos;
     private void Wander()
     {
+        if (controller.IsMoving) return;
+
         wanderTimer += Time.deltaTime;
 
         if (wanderTimer >= wanderTime)

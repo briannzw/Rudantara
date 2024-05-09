@@ -14,6 +14,7 @@ public class StatusUIController : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TMP_Text charaName;
     [SerializeField] private TMP_Text charaLevel;
+    [SerializeField] private TMP_Text charaEXP;
     [SerializeField] private Image charaImage;
     [SerializeField] private Transform statsList;
     [SerializeField] private GameObject statItem;
@@ -33,7 +34,8 @@ public class StatusUIController : MonoBehaviour
         selectedIndex = Mathf.Clamp(selectedIndex + indexChange, 0, characters.Count - 1);
         UpdateNavButton();
         charaName.text = SelectedChara.gameObject.name;
-        charaLevel.text = "Lv. " + SelectedChara.GetLevel().ToString();
+        charaLevel.text = "Lv. " + SelectedChara.Level.ToString();
+        charaEXP.text = "EXP " + Mathf.RoundToInt(SelectedChara.EXP).ToString() + " / " + Mathf.RoundToInt(SelectedChara.EXPNeeded).ToString();
         charaImage.sprite = SelectedChara.characterImage;
 
         // Remove all children

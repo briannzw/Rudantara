@@ -163,7 +163,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // Format
         prompt += "\n" + ReplaceFirst(responseFormat, "null", personality.IsEnemyDetected ? "1" : "0");
 
-        Debug.Log(prompt);
+        //Debug.Log(prompt);
 
         Send(prompt);
         sendTime = DateTime.Now;

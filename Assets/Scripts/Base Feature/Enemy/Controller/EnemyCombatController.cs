@@ -11,7 +11,7 @@ public class EnemyCombatController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Character character;
     [SerializeField] private AgentController controller;
-    [SerializeField] private HitController hitController;
+    [SerializeField] private HitController[] hitControllers;
     [SerializeField] private EnemyRandomDrop enemyRandomDrop;
     private Describable describable;
     
@@ -121,6 +121,7 @@ public class EnemyCombatController : MonoBehaviour
             animator.SetBool("Dead", true);
             GetComponent<Collider>().enabled = false;
             controller.enabled = false;
+            OnReset?.Invoke();
 
             StartCoroutine(AnimateDead());
         };
@@ -158,7 +159,10 @@ public class EnemyCombatController : MonoBehaviour
             animator.SetTrigger(availableSkills[randomSkill].Trigger);
 
             // Set HitController Name
-            hitController.Name = availableSkills[randomSkill].Name;
+            foreach (var hitController in hitControllers)
+            {
+                hitController.Name = availableSkills[randomSkill].Name;
+            }
         }
     }
 
@@ -177,7 +181,8 @@ public class EnemyCombatController : MonoBehaviour
 
         describable.OnEvent?.Invoke(describable.Name + " died and will be respawned");
         // Destroy(gameObject);
-        GetComponent<SpawnObject>().Release();
+        if(GetComponent<SpawnObject>())
+            GetComponent<SpawnObject>().Release();
     }
 
     private void Update()
@@ -206,7 +211,10 @@ public class EnemyCombatController : MonoBehaviour
             normalTimer -= Time.deltaTime;
             if (normalTimer < 0f)
             {
-                hitController.Name = normalAttackDescribe;
+                foreach (var hitController in hitControllers)
+                {
+                    hitController.Name = normalAttackDescribe;
+                }
                 animator.SetTrigger(normalAttackAnimTrigger);
                 // TODO: Distribution
                 normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);

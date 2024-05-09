@@ -14,6 +14,7 @@ public class AgentController : MonoBehaviour
 
     public bool IsTargetInRange { get; private set; }
     public bool IsTargetNull => targetTransform == null;
+    public bool IsMoving => animator.GetBool("IsMoving");
 
     private void OnEnable()
     {
@@ -34,7 +35,7 @@ public class AgentController : MonoBehaviour
 
     private void Start()
     {
-        DungeonGenerator.Instance.OnDungeonComplete += () => agent.enabled = true;
+        GameManager.Instance.DungeonNavMesh.OnDungeonNavMeshBuilt += () => agent.enabled = true;
     }
 
     private void Update()

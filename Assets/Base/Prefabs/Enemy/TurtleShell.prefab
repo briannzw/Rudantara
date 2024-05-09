@@ -1016,6 +1016,7 @@ MonoBehaviour:
   EnemyTags:
   - Player
   - Companion
+  characterImage: {fileID: 0}
 --- !u!114 &7943369461782761038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,6 +1029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a792fc09c9def514a9529621cd90c8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SharedEXP: []
   expPerSeconds: 1
   expPerSecondsCombat: 3
   expPerLevel:
@@ -1133,20 +1135,14 @@ MonoBehaviour:
   animator: {fileID: 95528395651247964}
   character: {fileID: 64766311757366526}
   controller: {fileID: 737672090467413326}
-  hitController: {fileID: 1229148752862930689}
-  playerUpgrades: {fileID: 0}
+  hitControllers:
+  - {fileID: 1229148752862930689}
+  enemyRandomDrop: {fileID: 0}
   normalAttackDescribe: Basic Hit
   normalAttackAnimTrigger: Attack1
   castSkillChance: 30
   Skills:
   - {fileID: 11400000, guid: 033a067bde81d324bb87bfecc2ddba3b, type: 2}
-  upgradeDatabase: {fileID: 11400000, guid: b213a458f7b5e194aacca8b39aa7f7de, type: 2}
-  seed: 0
-  m: 0
-  a: 0
-  c: 0
-  randomDrop: {fileID: 3471643304241853864, guid: 229fba16e88342d4a86117cdb43d6685,
-    type: 3}
 --- !u!195 &8137097179081481366
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1697,6 +1693,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4958735577281076}
     m_Modifications:
+    - target: {fileID: 201745112579038921, guid: 089f67989a945474aa5d6e438c2c6407,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1362981618968826035, guid: 089f67989a945474aa5d6e438c2c6407,
         type: 3}
       propertyPath: m_Name
@@ -1707,6 +1708,11 @@ PrefabInstance:
       propertyPath: character
       value: 
       objectReference: {fileID: 64766311757366526}
+    - target: {fileID: 6081684256675644440, guid: 089f67989a945474aa5d6e438c2c6407,
+        type: 3}
+      propertyPath: charaLevel
+      value: 
+      objectReference: {fileID: 7943369461782761038}
     - target: {fileID: 6711348063535652166, guid: 089f67989a945474aa5d6e438c2c6407,
         type: 3}
       propertyPath: enemyCombat

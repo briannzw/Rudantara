@@ -9,6 +9,8 @@ public class PauseController : PlayerInputControl
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private PlayerMovementController playerMovementController;
     [SerializeField] private TMP_Text generatingText;
+    [SerializeField] private TMP_Text iterationText;
+    [SerializeField] private TMP_Text enemyBaseLevelText;
 
     [Header("Child References")]
     [SerializeField] private StatusUIController statusUIController;
@@ -31,6 +33,8 @@ public class PauseController : PlayerInputControl
     public void Open()
     {
         Time.timeScale = 0.0f;
+        iterationText.text = "Iteration : " + GameManager.Instance.saveManager.SaveData.Iteration;
+        enemyBaseLevelText.text = "Enemy Base Level : " + GameManager.Instance.LevelManager.CurrentEnemyBaseLevel;
         pauseMenu.SetActive(true);
         InputManager.ToggleActionMap(playerControls.Panel);
     }
