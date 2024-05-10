@@ -32,11 +32,11 @@ public class UpgradeRandomizer : MonoBehaviour
     private Dictionary<UpgradeRarity, int> rarityCounts = new Dictionary<UpgradeRarity, int>();
 
     // LCG parameters
-    [SerializeField] int firstSeed;
-    [SerializeField] int seed;
-    [SerializeField] int m;
-    [SerializeField] int a;
-    [SerializeField] int c;
+    [SerializeField] long firstSeed;
+    [SerializeField] long seed;
+    [SerializeField] long m;
+    [SerializeField] long a;
+    [SerializeField] long c;
     [SerializeField] int upgradeSeed;
     [SerializeField] int statSeed;
 
@@ -55,10 +55,11 @@ public class UpgradeRandomizer : MonoBehaviour
         }
     }
 
-    private int LCG(int a, int c, int m, int seed)
+    private long LCG(long a, long c, long m, long seed)
     {
-        return (a * seed + c) % m;
+            return ((a * seed) + c) % m;
     }
+
     public void StartUpgrade()
     {
         availableUpgrades.Clear();
@@ -111,10 +112,11 @@ public class UpgradeRandomizer : MonoBehaviour
             }
 
             UpgradeRarity rarity = GetRarityFromLCG();
+            Debug.Log("rarity ke-"+i+" : "+rarity);
 
             Upgrade selectedUpgrade = GetSelectedUpgrade(rarity);
          
-            Debug.Log("Seed ke-"+i+" pilih Upgrade :"+seed);
+            Debug.Log("selected upgrade :"+selectedUpgrade.upgradeName); 
 
             /*while (randomizedUpgrades.Contains(selectedUpgrade))
             {
@@ -132,10 +134,10 @@ public class UpgradeRandomizer : MonoBehaviour
                 Debug.Log("Seed ke-"+i+" random stats :"+statSeed);
                 
                 if(!statSeedInitialized){
-                    statSeed = LCG(a, c, (stat.upgradeLimitUp+1), seed);
+                    statSeed = (int)LCG(a, c, (stat.upgradeLimitUp+1), seed);
                 }
                 else{
-                    statSeed = LCG(a, c, (stat.upgradeLimitUp+1), statSeed);
+                    statSeed = (int)LCG(a, c, (stat.upgradeLimitUp+1), statSeed);
                 }
                      
                 stat.upgradeValueStatic = statSeed;
@@ -157,7 +159,6 @@ public class UpgradeRandomizer : MonoBehaviour
                 }
             }
 
-            Debug.Log("selected upgrade :"+selectedUpgrade.upgradeName); 
             randomizedUpgrades.Add(selectedUpgrade);
             foreach (var stat in selectedUpgrade.stats){
                Debug.Log("Selected upgrade stats of "+selectedUpgrade.upgradeName+": "+stat.upgradeValueStatic);
@@ -171,10 +172,10 @@ public class UpgradeRandomizer : MonoBehaviour
         if (eligibleUpgrades.Count > 0)
         {
             if(!upgradeSeedInitialized){
-                upgradeSeed = LCG(a, c, m, seed);
+                upgradeSeed = (int)LCG(a, c, m, seed);
             }
             else{
-                upgradeSeed = LCG(a, c, m, upgradeSeed);     
+                upgradeSeed = (int)LCG(a, c, m, upgradeSeed);     
             }
             upgradeSeed = upgradeSeed % eligibleUpgrades.Count;
             return eligibleUpgrades[upgradeSeed];
@@ -185,7 +186,7 @@ public class UpgradeRandomizer : MonoBehaviour
 
     private UpgradeRarity GetRarityFromLCG()
     {
-        if (seed <= upgradeDatabase.commonUpgrades.Count)
+        if (seed < upgradeDatabase.commonUpgrades.Count)
         {
             return UpgradeRarity.Common;
         }

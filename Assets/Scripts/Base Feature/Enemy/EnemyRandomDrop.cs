@@ -8,13 +8,13 @@ public class EnemyRandomDrop : MonoBehaviour
     [SerializeField] private PlayerUpgrades playerUpgrades;
     // LCG parameters
     public UpgradeDatabase upgradeDatabase;
-    int firstSeed; 
+    [SerializeField] long firstSeed; 
     [SerializeField] bool firstInit = false;
-    [SerializeField] int seed;
-    [SerializeField] int m;
-    [SerializeField] int a;
-    [SerializeField] int c;
-    [SerializeField] int higherChance = 0;
+    [SerializeField] long seed;
+    [SerializeField] long m;
+    [SerializeField] long a;
+    [SerializeField] long c;
+    [SerializeField] long higherChance = 0;
     [SerializeField] private GameObject randomDrop;
 
     void Awake(){
@@ -28,8 +28,8 @@ public class EnemyRandomDrop : MonoBehaviour
         
     }
 
-    int LCG(int seed, int a, int c, int m){
-        return ((a * seed + c) % m);
+    long LCG(long seed, long a, long c, long m){
+        return ((a * seed) + c) % m;
     } 
 
      public void RandomizeRandomDrop(Vector3 randomPos, Quaternion quaternion){
@@ -50,8 +50,6 @@ public class EnemyRandomDrop : MonoBehaviour
         if (seed < 0){
             seed = -seed;
         }
-        
-        Debug.Log("Seed random drop:"+seed);
 
         float dropChance = (upgradeDatabase.commonUpgrades.Count + upgradeDatabase.rareUpgrades.Count) / 4; 
 
