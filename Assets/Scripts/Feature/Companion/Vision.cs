@@ -142,11 +142,9 @@ public class Vision : MonoBehaviour
         // Prevent too realistic vision, making gameplay not fun
         //if (!IsObscured(obj))
         //{
-        seen.Add(describable);
         owner.DescribeVisual("You saw [" + describable.Name + "]");
-        owner.DescribeVisual(describable.InitialReport);
-        describable.OnEvent += owner.DescribeVisual;
 
+        // If Enemy
         if (!describable.CompareTag("Enemy")) return;
 
         Character chara = obj.GetComponent<Character>();
@@ -188,13 +186,11 @@ public class Vision : MonoBehaviour
             {
                 CheckVision(other.gameObject, describable);
             }
-            else
-            {
-                seen.Add(describable);
 
-                owner.DescribeVisual(describable.InitialReport);
-                describable.OnEvent += owner.DescribeVisual;
-            }
+            seen.Add(describable);
+
+            owner.DescribeVisual(describable.InitialReport);
+            describable.OnEvent += owner.DescribeVisual;
         }
     }
 
@@ -203,8 +199,8 @@ public class Vision : MonoBehaviour
         Describable describable = null;
 
         foreach (var tag in viewTags)
-            if (other.CompareTag(tag))
         {
+            if (other.CompareTag(tag))
                 describable = other.GetComponentInChildren<Describable>();
         }
 
@@ -218,7 +214,8 @@ public class Vision : MonoBehaviour
 
                 if (describable.CompareTag("Enemy"))
                 {
-                    describable.GetComponent<Character>().OnCharacterDie -= OnCharaDied;
+                    Character chara = describable.GetComponent<Character>();
+                    chara.OnCharacterDie -= OnCharaDied;
                 }
             }
         }
@@ -226,6 +223,12 @@ public class Vision : MonoBehaviour
 
     private void OnCharaDied(Character chara)
     {
+        Describable desc = chara.GetComponent<Describable>();
+
+        if (seen.Contains(desc))
+            seen.Remove(desc);
+
+        owner.DescribeVisual("You saw [" + desc.Name + "] died.");
         owner.EnemyRemoved(chara);
         chara.OnCharacterDie -= OnCharaDied;
     }

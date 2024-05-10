@@ -103,6 +103,7 @@ MonoBehaviour:
   - How to Play (2)
   - Power Up!
   - End Goal
+  - Game Over
   - Thank You!
   instructions:
   - 'Thank you for participating in this playtest for our thesis project "Rudantara".
@@ -157,6 +158,13 @@ MonoBehaviour:
     Within 60 seconds after player enters the stage, boss
     will spawn in desired area. Defeating the boss will move the stage to the next
     iteration with harder difficulties'
+  - 'Game will end when player''s Health Point reaches 0, even when companion still
+    alive. Your companion won''t respawn if she dies, but will respawn in the next
+    iteration.
+
+
+    Also, the experience points you get will retain but the iteration
+    (stage level) will resets.'
   - Thank you again for your participation! Your feedback is essential to making
     this final project the best it can be.
 --- !u!1 &2887201006513554908
@@ -490,7 +498,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Regarding Companion
+  m_text: Game Over
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1046,9 +1054,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Companion uses a Large Language Model (like ChatGPT) to respond to its
-    surroundings, so there's some delay between requests using the internet. It might
-    affect how the gameplay feels.
+  m_text: 'Game will end when player''s Health Point reaches 0, even when companion
+    still alive. Your companion won''t respawn if she dies, but will respawn in the
+    next iteration.
+
+
+    Also, the experience points you get will retain but the
+    iteration (stage level) will resets.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

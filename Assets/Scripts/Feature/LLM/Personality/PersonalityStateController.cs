@@ -34,6 +34,17 @@ public class PersonalityStateController : MonoBehaviour
     {
         if (!enemiesDetected.Contains(chara)) enemiesDetected.Add(chara);
 
+        CheckStateChange();
+    }
+
+    public void RemoveEnemy(Character chara)
+    {
+        enemiesDetected.Remove(chara);
+        CheckStateChange();
+    }
+
+    private void CheckStateChange()
+    {
         // Every Enemy detected/undetected
         if (prevState != IsEnemyDetected())
         {
@@ -41,6 +52,4 @@ public class PersonalityStateController : MonoBehaviour
         }
         prevState = IsEnemyDetected();
     }
-
-    public void RemoveEnemy(Character chara) => enemiesDetected.Remove(chara);
 }

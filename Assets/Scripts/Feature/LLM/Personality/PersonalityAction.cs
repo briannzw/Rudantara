@@ -13,6 +13,9 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     [SerializeField] private GASSender sender;
     [SerializeField] private Personality personality;
 
+    [Header("Distance")]
+    [SerializeField] private AgentController agentController;
+
     [Header("Stats")]
     [SerializeField] private Character playerCharacter;
     [SerializeField] private Character character;
@@ -62,6 +65,8 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     private string pastLine;
     #endregion
 
+    public int RequestSent = 0;
+
     private void Start()
     {
         character.OnCharacterKill += (Character chara) => result.OwnEnemiesKilled++;
@@ -77,7 +82,17 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
     public void CreatePrompt()
     {
-        string prompt = personality.CreatePrompt("Past Action: " + pastAction + "\nPast Line: " + pastLine) + "\n";
+        string prevAction = "You are currently " + pastAction;
+
+        if(agentController.DistanceFrom(playerCharacter.transform) != -1)
+            prevAction += " and " + Math.Round(agentController.DistanceFrom(playerCharacter.transform), 1) + " meters away from your partner.";
+
+        string prevLine = "";
+        
+        if(pastLine != "")
+            prevLine += "Previously, you've said " + pastLine + "\n";
+        
+        string prompt = personality.CreatePrompt(prevAction + "\n" + prevLine) + "\n";
 
         // Previous result
         if (result.OwnerChara != null)
@@ -87,6 +102,8 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
         // Character Stats
         prompt += character.Describe(true) + "\n" + playerCharacter.Describe() + "\n";
+
+        prompt += "After receiving all of the information above, you need to define your next action by fulfilling all the JSON key and value instructions below.";
 
         // Combat State
         prompt += "\n" + actionStatePrompt + (personality.IsEnemyDetected ? "1" : "0") + "\n";
@@ -103,15 +120,6 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
             // Seperator
             if (i < stateActions.Count) prompt += ",\n";
             else prompt += ".\n";
-        }
-
-        // Initialize Targets
-        foreach (var seen in personality.vision.Seen)
-        {
-            Character chara = seen.gameObject.GetComponentInChildren<Character>();
-            if (chara == null || chara.IsDead) continue;
-
-            personalityTargetHandler.AddTarget(seen.Name, chara);
         }
 
         prompt += "\n" + targetPrompt + "\n" + DescribeTargets();
@@ -143,7 +151,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // If finishes combat
         if (!personality.IsEnemyDetected && result.WasInCombat)
         {
-            prompt += $"(key: line, value: string) Please give your comments on the previous combat max of 15 words. Please keep it short and non-explicit.";
+            prompt += $"(key: line, value: string) Please give your comments on the previous combat max of 20 words. Please keep it short and non-explicit.";
         }
         else prompt += "\n" + linePrompt;
 
@@ -163,13 +171,12 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // Format
         prompt += "\n" + ReplaceFirst(responseFormat, "null", personality.IsEnemyDetected ? "1" : "0");
 
-        //Debug.Log(prompt);
+        Debug.Log(prompt);
 
         Send(prompt);
         sendTime = DateTime.Now;
 
         // Resets
-        personalityTargetHandler.Reset();
         personality.Forget();
     }
 
@@ -187,13 +194,16 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     public void Send(string prompt)
     {
         prevPrompt = prompt;
-        if (requestCoroutine != null) StopCoroutine(requestCoroutine);
+        if (requestCoroutine != null) return;
         requestCoroutine = StartCoroutine(sender.CallGoogleAppsScript(this, prompt));
+        RequestSent++;
+        Debug.Log("REQUEST " + RequestSent);
     }
 
     public void Receive(string response)
     {
         receiveTime = DateTime.Now;
+        requestCoroutine = null;
 
         // If request failed, repeat
         if (response == null)
@@ -202,7 +212,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
             return;
         }
 
-        requestCoroutine = StartCoroutine(RePrompt());
+        StartCoroutine(RePrompt());
 
         var _response = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
 

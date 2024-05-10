@@ -1102,6 +1102,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   statsPattern: {fileID: 11400000, guid: 56208fe7a6df1854083ec88a809e4c38, type: 2}
+  ShareEXP: 1
   levelUpVFX: {fileID: 2894779867960177666, guid: ba124a1a1a8c28244a630a763f6d1156,
     type: 3}
 --- !u!114 &737672090467413326
@@ -1698,6 +1699,16 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 283761807470913560, guid: 089f67989a945474aa5d6e438c2c6407,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 2691818356965206860}
+    - target: {fileID: 283761807470913560, guid: 089f67989a945474aa5d6e438c2c6407,
+        type: 3}
+      propertyPath: describable
+      value: 
+      objectReference: {fileID: 4921840958321732925}
     - target: {fileID: 1362981618968826035, guid: 089f67989a945474aa5d6e438c2c6407,
         type: 3}
       propertyPath: m_Name
@@ -1713,6 +1724,11 @@ PrefabInstance:
       propertyPath: charaLevel
       value: 
       objectReference: {fileID: 7943369461782761038}
+    - target: {fileID: 6711348063535652166, guid: 089f67989a945474aa5d6e438c2c6407,
+        type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 64766311757366526}
     - target: {fileID: 6711348063535652166, guid: 089f67989a945474aa5d6e438c2c6407,
         type: 3}
       propertyPath: enemyCombat

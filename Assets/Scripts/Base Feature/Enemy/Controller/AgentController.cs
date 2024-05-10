@@ -134,4 +134,24 @@ public class AgentController : MonoBehaviour
             IsTargetInRange = false;
         }
     }
+
+    public float DistanceFrom(Transform other)
+    {
+        var path = new NavMeshPath();
+        float lng = -1;
+
+        path.ClearCorners();
+
+        if (NavMesh.CalculatePath(transform.position, other.position, 1 << NavMesh.GetAreaFromName("Walkable"), path))
+        {
+            lng = Vector3.Distance(transform.position, path.corners[0]);
+
+            for (int i = 1; i < path.corners.Length; ++i)
+            {
+                lng += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+            }
+        }
+
+        return lng;
+    }
 }

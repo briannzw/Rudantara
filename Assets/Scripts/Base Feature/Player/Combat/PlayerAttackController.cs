@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,7 @@ public class PlayerAttackController : PlayerInputControl
     [SerializeField] private HitController weaponHitController;
 
     private int resistance;
+    public Action<Transform> OnCombatEngaged;
 
     protected override void Start()
     {
@@ -27,6 +29,8 @@ public class PlayerAttackController : PlayerInputControl
                 resistance = StatsConst.HURT_RESISTANCE;
             }
         };
+
+        weaponHitController.OnHit += (other) => OnCombatEngaged?.Invoke(other);
     }
 
     private void OnAttack(InputAction.CallbackContext context)

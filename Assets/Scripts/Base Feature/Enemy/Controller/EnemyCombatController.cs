@@ -44,6 +44,7 @@ public class EnemyCombatController : MonoBehaviour
     #region Events
     public Action OnCombatEngaged;
     public Action OnReset;
+    public Action<bool> OnTaunted;
     #endregion
 
     private void OnEnable()
@@ -265,5 +266,11 @@ public class EnemyCombatController : MonoBehaviour
         }
     }
 
-   
+    public void Taunted(Transform target)
+    {
+        if(target == null) OnTaunted?.Invoke(false);
+
+        controller.SetTarget(target);
+        OnTaunted?.Invoke(true);
+    }
 }

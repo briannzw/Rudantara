@@ -24,6 +24,8 @@ public class GASSender : MonoBehaviour
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
             if(responseText) responseText.text = "ERROR: " + request.downloadHandler.text;
+            Debug.LogError(request.downloadHandler.text);
+            prompter.Receive(null);
         }
         else
         {

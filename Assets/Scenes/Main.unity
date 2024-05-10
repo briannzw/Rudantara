@@ -895,7 +895,16 @@ MonoBehaviour:
 
     There
     is no pain when getting damaged, every living being have a health point that
-    if reaches 0, they will respawn after a set of duration.'
+    if reaches 0, they will respawn after a set of duration.
+
+    There''s two type
+    of enemies in this forest,
+
+    1. Throntle : Turtle-like enemy with thorns on
+    its shell. It''s a close ranged enemy.
+
+    2. Bull Boss : Bull-like huge enemy
+    boss with powerful attacks and unique Slam attack.'
   responseText: {fileID: 0}
 --- !u!4 &374152382
 Transform:
@@ -969,7 +978,6 @@ MonoBehaviour:
     Extraversion: 0.45
     Agreeableness: 0.95
     Neuroticism: 0.2
-  vision: {fileID: 402482677}
   stateController: {fileID: 732057485}
 --- !u!114 &402226338
 MonoBehaviour:
@@ -1571,6 +1579,81 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
+--- !u!1 &628852604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 628852605}
+  - component: {fileID: 628852607}
+  - component: {fileID: 628852606}
+  m_Layer: 5
+  m_Name: CompanionMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &628852605
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628852604}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 301075192713575318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &628852606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628852604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 1, b: 0.87441564, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 6881dc3d3e94a3c45b8007feaf2e2cd5, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &628852607
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628852604}
+  m_CullTransparentMesh: 1
 --- !u!1001 &638510923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2432,9 +2515,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1187425329}
-  playerTransform: {fileID: 1224930675}
   character: {fileID: 837544598}
   controller: {fileID: 837544599}
+  playerTransform: {fileID: 1224930675}
+  playerAttack: {fileID: 1224930680}
   actionModule: {fileID: 1207500705}
   actionTarget: {fileID: 1207500703}
   normalAttackAnimTrigger: Attack
@@ -4088,6 +4172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0474fd3512494a340b81a0c2eff41b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vision: {fileID: 402482677}
 --- !u!4 &1207500704
 Transform:
   m_ObjectHideFlags: 0
@@ -4118,6 +4203,7 @@ MonoBehaviour:
   prevPrompt: 
   sender: {fileID: 374152381}
   personality: {fileID: 402226337}
+  agentController: {fileID: 837544599}
   playerCharacter: {fileID: 1224930676}
   character: {fileID: 837544598}
   actionStatePrompt: '(key: state, value: integer) Combat state : '
@@ -4136,7 +4222,7 @@ MonoBehaviour:
   - Protect your partner by luring enemies far from your partner
   - Seek protection from your partner
   - Flee from the battle to the safe place
-  - Do nothing
+  - Regroup to your partner
   alternativeActionPrompt: '(key: alternative, value: index) If you chose first action
     (1. Focus Attack), prioritize other one action below based on your personality:'
   targetPrompt: '(key: target, value: string) If you chose first action (1. Focus
@@ -4146,9 +4232,10 @@ MonoBehaviour:
   skillDescribe: 
   skillTargetPrompt: '(key: healTarget, value: string) You can heal one, who do you
     want to heal?'
-  linePrompt: '(key: line, value: string) Give me a new single sentence that you
-    would say based on your chosen action with max of 12 words. Make sure it didn''t
-    repeat the past line spoken by you. Please keep it short and non-explicit.'
+  linePrompt: '(key: line, value: string) You must write a sentence that you would
+    say based on your chosen action and current situation with max of 20 words. Make
+    sure it didn''t repeat the past line spoken by you. Please keep it short and
+    non-explicit.'
   emotions:
   - Usual
   - Smiled
@@ -4163,6 +4250,7 @@ MonoBehaviour:
     \"state\": null, \"action\": null, \"alternative\": null, \"target\": null, \"healTarget\":
     null, \"emotion\": null,  \"line\": null }"
   responseTime: 8
+  RequestSent: 0
 --- !u!1 &1211812473
 GameObject:
   m_ObjectHideFlags: 0
@@ -4268,6 +4356,7 @@ MonoBehaviour:
   nextLevelPanel: {fileID: 1646919061}
   nextLevelIterationText: {fileID: 1524972581}
   gameOverPanel: {fileID: 78273658}
+  minimap: {fileID: 6415763854251342813}
   enemyBaseLevels: 01000000020000000400000006000000080000000a0000000d00000010000000140000001a0000002000000028000000300000003c0000004600000050000000550000005a0000005f00000064000000
 --- !u!114 &1211812479
 MonoBehaviour:
@@ -7399,6 +7488,7 @@ MonoBehaviour:
   character: {fileID: 0}
   playerUpgrades: {fileID: 0}
   upgradeDatabase: {fileID: 11400000, guid: b213a458f7b5e194aacca8b39aa7f7de, type: 2}
+  firstSeed: 0
   firstInit: 0
   seed: 0
   m: 0
@@ -9183,6 +9273,81 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1816245185}
   m_SourcePrefab: {fileID: 100100000, guid: 004f576155030b641865d7cd06f3141e, type: 3}
+--- !u!1 &1927288029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1927288030}
+  - component: {fileID: 1927288032}
+  - component: {fileID: 1927288031}
+  m_Layer: 5
+  m_Name: BossMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1927288030
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927288029}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 301075192713575318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 17.5, y: 17.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1927288031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927288029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8018868, g: 0.07111073, b: 0.07111067, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 55f094e5dacdf4843938fbdd98afad24, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1927288032
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927288029}
+  m_CullTransparentMesh: 1
 --- !u!1 &1985897024
 GameObject:
   m_ObjectHideFlags: 0
@@ -9771,6 +9936,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8657288436720201240}
+  - {fileID: 1927288030}
+  - {fileID: 628852605}
   - {fileID: 3068776128397340280}
   m_Father: {fileID: 2247621503916100218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10921,7 +11088,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 10, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &3511130772584071499
 MonoBehaviour:
@@ -12003,8 +12170,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 120, y: 0}
-  m_SizeDelta: {x: -130, y: -20}
+  m_AnchoredPosition: {x: 140, y: 0}
+  m_SizeDelta: {x: -150, y: -20}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &6357646902926479490
 RectTransform:
@@ -12056,10 +12223,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d789048ace34ff9429cd680890a8de48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  marker: {fileID: 3068776128397340280}
   mapImage: {fileID: 8657288436720201240}
   mapMaskImage: {fileID: 301075192713575318}
+  marker: {fileID: 3068776128397340280}
   playerReference: {fileID: 1224930675}
+  companionMarker: {fileID: 628852605}
+  companionReference: {fileID: 837544602}
+  bossMarker: {fileID: 1927288030}
+  bossReference: {fileID: 0}
   offset: {x: 0, y: 0}
   areaDimensions: {x: 80, y: 80}
 --- !u!224 &6475018702930483510
@@ -12081,7 +12252,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 450, y: 125}
+  m_SizeDelta: {x: 520, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6488778541291217601
 CanvasRenderer:

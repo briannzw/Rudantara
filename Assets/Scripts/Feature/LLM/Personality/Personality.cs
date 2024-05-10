@@ -8,9 +8,6 @@ public class Personality : MonoBehaviour
     [SerializeField, TextArea] private string characterDescription;
     [SerializeField] private BigFivePersonality personalityTraits;
 
-    // Sensors
-    public Vision vision;
-
     // Memory
     private MemoryPersistence memory;
 
@@ -20,7 +17,6 @@ public class Personality : MonoBehaviour
     private void Awake()
     {
         me = GetComponent<Describable>();
-        vision = GetComponentInChildren<Vision>();
         memory = GetComponentInChildren<MemoryPersistence>();
     }
 
@@ -47,13 +43,13 @@ public class Personality : MonoBehaviour
 
         prompt += personalityTraits.Describe() + "\n\n";
 
-        prompt += "Here is your response and its result on past action, please utilize this information when choosing actions:\n";
+        prompt += "Here is summary of your response and its result on your action, please utilize this information when choosing actions.\n";
+        if(addPrev != null) prompt += addPrev + "\n\n";
         prompt += "Previous memories:\n";
         prompt += memory.Reflect();
-        if(addPrev != null) prompt += addPrev + "\n\n";
 
         // Memory persistence
-        prompt += "Here are your memories after your past action and its frequency:\n";
+        prompt += "Here are your memories after your current action and its frequency:\n";
         prompt += memory.Describe();
 
         return prompt;

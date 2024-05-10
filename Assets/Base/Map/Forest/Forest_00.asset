@@ -28,8 +28,8 @@ MonoBehaviour:
     deltaLoaderPos: {x: 0, y: 0, z: 0}
     useExtra: 0
     iterateExtra: 0
-    extra: {fileID: 0}
-    extraPos: {x: 0, y: 0, z: 0}
+    extra: {fileID: 3812080126753431075, guid: 721eabfb4d6d8bb4faf80e4e7135fd3d, type: 3}
+    extraPos: {x: 24, y: 0, z: 24}
     rooms: 1
     shape: {fileID: 11400000, guid: 294ba84c357a2374299821d20d65bae7, type: 2}
     useBorder: 1

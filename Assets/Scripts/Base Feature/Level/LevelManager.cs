@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject nextLevelPanel;
     [SerializeField] private TMP_Text nextLevelIterationText;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private Minimap minimap;
 
     [Header("Parameters")]
     // Enemy base level
@@ -59,6 +60,8 @@ public class LevelManager : MonoBehaviour
 
     public void SetBoss(Character bossChara)
     {
+        minimap.SetBoss(bossChara.transform);
+
         bossChara.OnCharacterDie += (value) =>
         {
             KillAll();

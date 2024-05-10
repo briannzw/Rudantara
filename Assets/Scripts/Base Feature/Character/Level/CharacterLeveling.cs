@@ -114,8 +114,8 @@ public class CharacterLeveling : MonoBehaviour
             if (CurrentLevel < 100 && Experiences >= ExpNeeded)
             {
                 // Level Up
-                Experiences -= ExpNeeded;
                 CurrentLevel++;
+                Experiences -= ExpNeeded;
 
                 if (levelUpVFX)
                 {

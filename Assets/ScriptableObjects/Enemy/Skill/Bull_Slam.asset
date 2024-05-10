@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Bull Slam
   Trigger: Skill1
   Loop: 0
-  ManaRequired: 15
+  ManaRequired: 20
   Cooldown: 15
-  AttackPercent: 170
+  AttackPercent: 140
   VFX: {fileID: 0}

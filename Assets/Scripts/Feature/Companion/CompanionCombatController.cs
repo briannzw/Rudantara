@@ -9,14 +9,17 @@ public class CompanionCombatController : MonoBehaviour
 {
     private enum CompanionCombatState
     {
-        Attack, Flee, Idle, Down
+        Attack, Flee, Idle, Inactive
     }
 
     [Header("References")]
     [SerializeField] private Animator animator;
-    [SerializeField] private Transform playerTransform;
     [SerializeField] private Character character;
     [SerializeField] private AgentController controller;
+
+    [Header("Player References")]
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private PlayerAttackController playerAttack;
 
     [Header("Action Related")]
     [SerializeField] private PersonalityAction actionModule;
@@ -40,6 +43,8 @@ public class CompanionCombatController : MonoBehaviour
 
     private CompanionCombatState currentState;
     private int nextActionIndex;
+
+    private bool taunting;
 
     private void Awake()
     {
@@ -69,6 +74,17 @@ public class CompanionCombatController : MonoBehaviour
                 resistance = StatsConst.HURT_RESISTANCE;
             }
         };
+
+        // Player Combat Engage
+        playerAttack.OnCombatEngaged += (other) =>
+        {
+            if (currentState != CompanionCombatState.Inactive) return;
+
+            controller.SetTarget(other);
+            currentState = CompanionCombatState.Attack;
+            // Default to attack nearest enemy
+            nextActionIndex = 1;
+        };
     }
 
     private void OnEnable()
@@ -81,18 +97,20 @@ public class CompanionCombatController : MonoBehaviour
     private void OnDisable()
     {
         actionModule.OnResponseReceived -= ChangeState;
-        StopAllCoroutines();
+        taunting = false;
     }
 
     private void ChangeState(ActionResponse actionResponse)
     {
         if (actionResponse.State != 1)
         {
-            currentState = CompanionCombatState.Idle;
+            currentState = CompanionCombatState.Inactive;
             return;
         }
         int chosenIndex = actionResponse.ActionIndex;
-        StopAllCoroutines();
+
+        taunting = false;
+
         nextActionIndex = 0;
 
         if(actionResponse.ActionIndex == 0)
@@ -115,7 +133,7 @@ public class CompanionCombatController : MonoBehaviour
         {
             // Focus attacking one target
             case 0:
-                controller.SetTarget(actionTarget.GetTarget(actionResponse.TargetName));
+                controller.SetTarget(actionTarget.GetTarget(actionResponse.TargetName).transform);
                 currentState = CompanionCombatState.Attack;
                 nextActionIndex = actionResponse.AlternativeActionIndex + 1;
                 break;
@@ -130,20 +148,20 @@ public class CompanionCombatController : MonoBehaviour
             case 2:
                 controller.SetTarget(GetNearestEnemy());
                 currentState = CompanionCombatState.Attack;
-                StartCoroutine(Taunt());
+                StartCoroutine(Taunt(transform));
                 break;
             // Protect your partner by luring enemies far from your partner
             case 3:
                 controller.SetTarget(null);
-                StartCoroutine(Taunt());
+                StartCoroutine(Taunt(transform));
                 currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
             // Seek protection from your partner
             case 4:
                 controller.SetTarget(playerTransform);
-                currentState = CompanionCombatState.Flee;
-                fleeTimer = 0f;
+                currentState = CompanionCombatState.Idle;
+                StartCoroutine(Taunt(playerTransform));
                 break;
             // Flee from the battle to the safe place
             case 5:
@@ -151,17 +169,16 @@ public class CompanionCombatController : MonoBehaviour
                 currentState = CompanionCombatState.Flee;
                 fleeTimer = 0f;
                 break;
-            // Do nothing (exit combat state)
+            // Regroup to your partner
             case 6:
-                controller.SetTarget(null);
-                currentState = CompanionCombatState.Idle;
+                controller.SetTarget(playerTransform);
+                currentState = CompanionCombatState.Inactive;
                 break;
         }
 
         if(!string.IsNullOrEmpty(actionResponse.HealTarget))
         {
-            Debug.Log("TEst");
-            Cast(skills[0], actionTarget.GetTargetChara(actionResponse.HealTarget));
+            Cast(skills[0], actionTarget.GetTarget(actionResponse.HealTarget));
         }
     }
 
@@ -174,8 +191,18 @@ public class CompanionCombatController : MonoBehaviour
         {
             case CompanionCombatState.Attack:
                 {
-                    if ((controller.IsTargetNull || controller.IsTargetDied()) && nextActionIndex != 0) ChangeState(new ActionResponse(nextActionIndex));
-                    if (!controller.IsTargetInRange) return;
+                    if ((controller.IsTargetNull || controller.IsTargetDied()) && nextActionIndex != 0)
+                    {
+                        if (nextActionIndex == 1 && GetNearestEnemy() == null)
+                        {
+                            controller.SetTarget(playerTransform);
+                            currentState = CompanionCombatState.Inactive;
+                            return;
+                        }
+                        ChangeState(new ActionResponse(nextActionIndex));
+                    }
+                    if (!controller.IsTargetInRange)
+                        return;
 
                     normalTimer -= Time.deltaTime;
                     if (normalTimer < 0f)
@@ -203,23 +230,30 @@ public class CompanionCombatController : MonoBehaviour
                     }
                     break;
                 }
-            case CompanionCombatState.Idle:
+            case CompanionCombatState.Idle :
+            case CompanionCombatState.Inactive:
                 break;
         }
     }
 
-    private IEnumerator Taunt()
+    private IEnumerator Taunt(Transform target)
     {
-        while (true)
+        taunting = true;
+        var enemyList = new List<EnemyCombatController>();
+        while (taunting)
         {
-            var enemyList = ColliderDetector.Find<AgentController>(transform.position, 5f, LayerMask.GetMask("Enemy"));
+            enemyList = ColliderDetector.Find<EnemyCombatController>(transform.position, 5f, LayerMask.GetMask("Enemy"));
             for (int i = 0; i < enemyList.Count; i++)
             {
-                enemyList[i].SetTarget(transform);
+                enemyList[i].Taunted(target);
             }
 
             yield return new WaitForSeconds(1f);
         }
+
+        // Cancel taunt
+        for (int i = 0; i < enemyList.Count; i++)
+            enemyList[i].Taunted(null);
     }
 
     private void Cast(Skill skill, Character target)

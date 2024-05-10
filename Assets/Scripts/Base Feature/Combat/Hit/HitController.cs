@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -11,6 +12,7 @@ public class HitController : Describable
     [SerializeField] private GameObject hitVFX;
 
     private bool hit = false;
+    public Action<Transform> OnHit;
 
     private void Awake()
     {
@@ -37,10 +39,11 @@ public class HitController : Describable
 
             Describable source = sourceChara.GetComponentInChildren<Describable>();
             Describable strucked = other.GetComponentInChildren<Describable>();
-            if (source != null && !hit)
+            if (source != null)
                 OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + (Skill ? Skill.Name : Name) + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
 
             hit = true;
+            OnHit?.Invoke(other.transform);
 
             // VFX
             if (hitVFX == null) return;
