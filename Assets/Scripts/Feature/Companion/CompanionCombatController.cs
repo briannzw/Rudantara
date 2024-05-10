@@ -158,9 +158,10 @@ public class CompanionCombatController : MonoBehaviour
                 break;
         }
 
-        if(actionResponse.SkillIndex != -1)
+        if(!string.IsNullOrEmpty(actionResponse.HealTarget))
         {
-            Cast(skills[actionResponse.SkillIndex], actionTarget.GetTarget(actionResponse.SkillTarget).GetComponent<Character>());
+            Debug.Log("TEst");
+            Cast(skills[0], actionTarget.GetTargetChara(actionResponse.HealTarget));
         }
     }
 
@@ -226,6 +227,7 @@ public class CompanionCombatController : MonoBehaviour
         if (!skills.Contains(skill)) return;
 
         skillCaster.Target = target;
+        animator.SetTrigger("Heal");
     }
 
     private Transform GetNearestEnemy()

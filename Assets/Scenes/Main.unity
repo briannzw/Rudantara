@@ -4136,17 +4136,16 @@ MonoBehaviour:
   - Protect your partner by luring enemies far from your partner
   - Seek protection from your partner
   - Flee from the battle to the safe place
-  - Do nothing (exit combat state)
+  - Do nothing
   alternativeActionPrompt: '(key: alternative, value: index) If you chose first action
     (1. Focus Attack), prioritize other one action below based on your personality:'
   targetPrompt: '(key: target, value: string) If you chose first action (1. Focus
     Attack), choose one of your target:'
   personalityTargetHandler: {fileID: 1207500703}
-  skillPrompt: '(key: skill, value: index) Here are your available skills, choose
-    to use one if needed:'
+  skillPrompt: 
   skillDescribe: 
-  skillTargetPrompt: '(key: skillTarget, value: index) If you chose to use your skill
-    available above, choose one of your target:'
+  skillTargetPrompt: '(key: healTarget, value: string) You can heal one, who do you
+    want to heal?'
   linePrompt: '(key: line, value: string) Give me a new single sentence that you
     would say based on your chosen action with max of 12 words. Make sure it didn''t
     repeat the past line spoken by you. Please keep it short and non-explicit.'
@@ -4161,8 +4160,8 @@ MonoBehaviour:
     did you feel right now? Choose one from the list below:'
   responseFormat: "Put your responses in this JSON placeholder without unneccessary
     modifications based on the keys and its required value type mentioned above:\n\r{
-    \"state\": null, \"action\": null, \"alternative\": null, \"target\": null, \"skill\":
-    null, \"skillTarget\": null, \"emotion\": null,  \"line\": null }"
+    \"state\": null, \"action\": null, \"alternative\": null, \"target\": null, \"healTarget\":
+    null, \"emotion\": null,  \"line\": null }"
   responseTime: 8
 --- !u!1 &1211812473
 GameObject:
@@ -6472,16 +6471,16 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3761056652683635932, guid: a4e239d9a51412042bd8c2fd566bc7ce,
         type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 618552791}
+    - targetCorrespondingSourceObject: {fileID: 3761056652683635932, guid: a4e239d9a51412042bd8c2fd566bc7ce,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 1337509848}
     - targetCorrespondingSourceObject: {fileID: 3761056652683635932, guid: a4e239d9a51412042bd8c2fd566bc7ce,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 638510924}
-    - targetCorrespondingSourceObject: {fileID: 3761056652683635932, guid: a4e239d9a51412042bd8c2fd566bc7ce,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 618552791}
     - targetCorrespondingSourceObject: {fileID: 7570728849950379547, guid: a4e239d9a51412042bd8c2fd566bc7ce,
         type: 3}
       insertIndex: 3

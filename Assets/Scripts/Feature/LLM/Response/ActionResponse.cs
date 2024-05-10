@@ -6,8 +6,7 @@ public class ActionResponse
     public int ActionIndex;
     public int AlternativeActionIndex;
     public string TargetName;
-    public int SkillIndex;
-    public string SkillTarget;
+    public string HealTarget;
     public string Line;
     public int EmotionIndex;
 
@@ -20,15 +19,13 @@ public class ActionResponse
         if (!data.ContainsKey("alternative") || data["alternative"] == null) AlternativeActionIndex = -1;
         else AlternativeActionIndex = int.Parse(data["alternative"]) - 1;
 
-        if (!data.ContainsKey("skill") || data["skill"] == null || !data.ContainsKey("skillTarget") || data["skillTarget"] == null)
+        if (!data.ContainsKey("healTarget") || data["healTarget"] == null)
         {
-            SkillIndex = -1;
-            SkillTarget = "";
+            HealTarget = "";
         }
         else
         {
-            SkillIndex = int.Parse(data["skill"]) - 1;
-            SkillTarget = data["skillTarget"];
+            HealTarget = data["healTarget"];
         }
 
 
@@ -45,8 +42,7 @@ public class ActionResponse
         State = 1;
         ActionIndex = actionIndex;
         AlternativeActionIndex = -1;
-        SkillIndex = -1;
-        SkillTarget = null;
+        HealTarget = null;
         TargetName = null;
         Line = null;
         EmotionIndex = 0;

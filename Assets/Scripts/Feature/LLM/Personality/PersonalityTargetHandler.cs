@@ -23,6 +23,16 @@ public class PersonalityTargetHandler : MonoBehaviour
         return null;
     }
 
+    public Character GetTargetChara(string key)
+    {
+        if (targets.ContainsKey(key))
+            return targets[key];
+        else if (prevTargets.ContainsKey(key))
+            return prevTargets[key];
+
+        return null;
+    }
+
     public void Reset()
     {
         prevTargets = new Dictionary<string, Character>(targets);

@@ -129,11 +129,11 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
             else prompt += ".\n";
         }
 
-        // Skills
-        prompt += "\n" + skillPrompt + "\n" + skillDescribe + "\n" + skillTargetPrompt + "\n";
+        // Heal
+        prompt += "\n" +/* skillPrompt + "\n" + skillDescribe + "\n" + */ skillTargetPrompt + "\n";
 
         // Add Self as Skill target
-        personalityTargetHandler.AddTarget(personality.Name, character);
+        personalityTargetHandler.AddTarget("Yourself", character);
         prompt += DescribeTargets();
 
         // Suggestion
