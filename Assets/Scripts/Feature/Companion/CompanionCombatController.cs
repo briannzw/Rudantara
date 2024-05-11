@@ -201,7 +201,7 @@ public class CompanionCombatController : MonoBehaviour
                         }
                         ChangeState(new ActionResponse(nextActionIndex));
                     }
-                    if (!controller.IsTargetInRange)
+                    if (!controller.IsTargetInRange || controller.IsTargetDied())
                         return;
 
                     normalTimer -= Time.deltaTime;

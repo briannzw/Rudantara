@@ -14,16 +14,27 @@ public class EnemyDetection : MonoBehaviour
 
     private void Update()
     {
+        if (controller.IsTargetDied()) SwitchTarget();
+
         if (!controller.IsTargetNull && controller.IsTargetDied())
         {
             controller.SetTarget(null);
             currentTarget = null;
 
-            foreach (var chara in detectedCharacters)
-            {
-                controller.SetTarget(chara.transform);
-                currentTarget = chara.transform;
-            }
+            SwitchTarget();
+        }
+    }
+
+    public void SwitchTarget()
+    {
+        if (detectedCharacters.Count == 0) return;
+
+        foreach (var chara in detectedCharacters)
+        {
+            if (chara.IsDead) continue;
+
+            controller.SetTarget(chara.transform);
+            currentTarget = chara.transform;
         }
     }
 
