@@ -10,6 +10,7 @@ public class ActionResponse
     public string HealTarget;
     public string Line;
     public int EmotionIndex;
+    public string Summary;
 
     public ActionResponse(Dictionary<string, string> data)
     {
@@ -35,6 +36,9 @@ public class ActionResponse
 
         if (!data.ContainsKey("emotion") || data["emotion"] == null) EmotionIndex = 0;
         else EmotionIndex = int.Parse(data["emotion"]) - 1;
+
+        if (!data.ContainsKey("summary") || data["summary"] == null) Summary = null;
+        else Summary = data["summary"];
     }
 
     // Defaults
@@ -47,5 +51,6 @@ public class ActionResponse
         TargetName = null;
         Line = null;
         EmotionIndex = 0;
+        Summary = null;
     }
 }

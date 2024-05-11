@@ -18,4 +18,4 @@ MonoBehaviour:
   ManaRequired: 0
   Cooldown: 5
   AttackPercent: 100
-  VFX: {fileID: 0}
+  VFX: {fileID: 7484796846338516358, guid: 05a5eb45c6abb9b4684431fc754c6f38, type: 3}

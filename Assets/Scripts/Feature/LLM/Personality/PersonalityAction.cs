@@ -49,6 +49,9 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     [SerializeField] private List<string> emotions;
     [SerializeField, TextArea] private string emotionPrompt;
 
+    [Header("Summary")]
+    [SerializeField, TextArea] private string summaryPrompt;
+
     [Header("Response")]
     [SerializeField, TextArea] private string responseFormat;
     [SerializeField] private float responseTime = 5f;
@@ -92,7 +95,13 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         if(pastLine != "\"\"")
             prevLine += "Previously, you've said " + pastLine + "\n";
         
-        string prompt = personality.CreatePrompt(prevAction + "\n" + prevLine) + "\n";
+        // Keywords
+        var keywords = personalityTargetHandler.TargetsToHashset();
+
+        if(!string.IsNullOrEmpty(pastAction))
+            keywords.Add(pastAction.ToLower());
+
+        string prompt = personality.CreatePrompt(keywords, prevAction + "\n" + prevLine) + "\n";
 
         // Previous result
         if (result.OwnerChara != null)
@@ -168,6 +177,9 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
             else prompt += ".\n";
         }
 
+        // Summary
+        prompt += "\n" + summaryPrompt + "\n";
+
         // Format
         prompt += "\n" + ReplaceFirst(responseFormat, "null", personality.IsEnemyDetected ? "1" : "0");
 
@@ -193,16 +205,16 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
     public void Send(string prompt)
     {
+        prevPrompt = prompt;
+        if (requestCoroutine != null) return;
+        requestCoroutine = StartCoroutine(sender.CallGoogleAppsScript(this, prompt));
+
         // If previous prompt failed, create new prompt
-        if(RequestFailed > 1)
+        if (RequestFailed > 1)
         {
             CreatePrompt();
             return;
         }
-
-        prevPrompt = prompt;
-        if (requestCoroutine != null) return;
-        requestCoroutine = StartCoroutine(sender.CallGoogleAppsScript(this, prompt));
     }
 
     public void Receive(string response)

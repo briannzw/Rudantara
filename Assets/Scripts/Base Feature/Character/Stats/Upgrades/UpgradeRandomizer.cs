@@ -177,7 +177,9 @@ public class UpgradeRandomizer : MonoBehaviour
             else{
                 upgradeSeed = (int)LCG(a, c, m, upgradeSeed);     
             }
+            Debug.Log("Upgrade seed sebelum dibagi eligible upgrades ="+upgradeSeed);
             upgradeSeed = upgradeSeed % eligibleUpgrades.Count;
+            Debug.Log("Upgrade seed sesudah dibagi eligible upgrades ="+upgradeSeed);
             return eligibleUpgrades[upgradeSeed];
         }
 

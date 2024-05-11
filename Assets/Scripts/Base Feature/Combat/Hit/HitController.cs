@@ -7,6 +7,7 @@ public class HitController : Describable
     [Header("References")]
     public Character sourceChara;
     public Skill Skill;
+    [SerializeField] private Describable sourceDescribable;
 
     [Header("VFX")]
     [SerializeField] private GameObject hitVFX;
@@ -37,10 +38,12 @@ public class HitController : Describable
             if (chara.CheckStat(DynamicStatEnum.Health) <= 0f)
                 sourceChara.OnCharacterKill?.Invoke(chara);
 
-            Describable source = sourceChara.GetComponentInChildren<Describable>();
+            if (sourceDescribable == null)
+                sourceDescribable = sourceChara.GetComponentInChildren<Describable>();
+
             Describable strucked = other.GetComponentInChildren<Describable>();
-            if (source != null)
-                OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + (Skill ? Skill.Name : Name) + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
+            if (sourceDescribable != null && strucked != null)
+                OnEvent?.Invoke("You saw " + sourceDescribable.Name + "'s [" + (Skill ? Skill.Name : Name) + "] struck " + strucked.Name + ", dealing " + Mathf.RoundToInt(finalDamage).ToString() + " damage.");
 
             hit = true;
             OnHit?.Invoke(other.transform);
@@ -59,7 +62,7 @@ public class HitController : Describable
 
         Describable source = sourceChara.GetComponentInChildren<Describable>();
         if (source != null)
-            OnEvent?.Invoke("You saw [" + source.Name + "]'s [" + (Skill ? Skill.Name : Name) + "] didn't hit anything.");
+            OnEvent?.Invoke("You saw " + source.Name + "'s [" + (Skill ? Skill.Name : Name) + "] didn't hit anything.");
     }
 
     private bool CompareTags(Collider other)

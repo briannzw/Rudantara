@@ -900,11 +900,14 @@ MonoBehaviour:
     There''s two type
     of enemies in this forest,
 
-    1. Throntle : Turtle-like one eyed enemy with
+    1. Thorntle : Turtle-like one eyed enemy with
     thorns on its shell. It''s a close ranged enemy with.
 
     2. Bull Boss : Bull-like
-    huge enemy boss with powerful attacks and unique Slam attack.'
+    huge enemy boss with powerful attacks and unique Slam attack.
+
+    The end goal
+    is to defeat the Bull Boss to win the level.'
   responseText: {fileID: 0}
 --- !u!4 &374152382
 Transform:
@@ -2754,8 +2757,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1187425333}
   - {fileID: 402226336}
+  - {fileID: 1187425333}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &837544603
@@ -2837,7 +2840,7 @@ PrefabInstance:
     - target: {fileID: 1907099658630953841, guid: 4a5c37d2857381d468220b71e1679f3b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2101575800953576985, guid: 4a5c37d2857381d468220b71e1679f3b,
         type: 3}
@@ -4257,12 +4260,16 @@ MonoBehaviour:
   - Hurt
   emotionPrompt: '(key: emotion, value: index) Based on your line above, what emotion
     did you feel right now? Choose one from the list below:'
+  summaryPrompt: '(key: summary, value: string) Based on information you got above,
+    summarize the information and situation you are in based on your personality
+    and thinking. This summary will be used as your memory later, so make it LLM-friendly
+    and non-explicit.'
   responseFormat: "Put your responses in this JSON placeholder without unneccessary
     modifications based on the keys and its required value type mentioned above:\n\r{
     \"state\": null, \"action\": null, \"alternative\": null, \"target\": null, \"healTarget\":
-    null, \"emotion\": null,  \"line\": null }"
+    null, \"emotion\": null, \"line\": \"\", \"summary\": \"\" }"
   responseTime: 8
-  RequestSent: 0
+  RequestFailed: 0
 --- !u!1 &1211812473
 GameObject:
   m_ObjectHideFlags: 0
@@ -9516,6 +9523,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2041362232}
   - component: {fileID: 2041362233}
+  - component: {fileID: 2041362234}
   m_Layer: 0
   m_Name: Memory
   m_TagString: Untagged
@@ -9550,7 +9558,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7882381e8609648a8a5fb630d43f3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  decayFactor: 0.9
   emptyMemoryDescription: Nothing important happened
+  actionModule: {fileID: 1207500705}
+  memoryRetrival: {fileID: 2041362234}
+--- !u!114 &2041362234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041362231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fa73bd843f31054d87833f5840cbc42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2045062410
 GameObject:
   m_ObjectHideFlags: 0

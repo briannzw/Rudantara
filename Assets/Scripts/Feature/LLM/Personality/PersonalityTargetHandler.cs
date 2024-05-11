@@ -21,6 +21,19 @@ public class PersonalityTargetHandler : MonoBehaviour
         return targets[name];
     }
 
+    public HashSet<string> TargetsToHashset()
+    {
+        HashSet<string> _targets = new HashSet<string>();
+
+        foreach(var target in targets)
+        {
+            if(target.Key.Contains("Thorntle")) _targets.Add("thorntle");
+            _targets.Add(target.Key.ToLower());
+        }
+
+        return _targets;
+    }
+
     private void Populate()
     {
         targets.Clear();
