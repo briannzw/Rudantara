@@ -152,7 +152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Sword Slash
   sourceChara: {fileID: 0}
-  Skill: {fileID: 11400000, guid: 135e163f4a057da45868d73d9af1907b, type: 2}
+  Skill: {fileID: 11400000, guid: 61bb1fe8c7fe38f469d39804f6075184, type: 2}
+  sourceDescribable: {fileID: 0}
   hitVFX: {fileID: 0}
 --- !u!114 &178458279103237387
 MonoBehaviour:

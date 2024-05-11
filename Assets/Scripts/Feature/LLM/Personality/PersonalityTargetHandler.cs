@@ -41,6 +41,7 @@ public class PersonalityTargetHandler : MonoBehaviour
         // Initialize Targets
         foreach (var seen in vision.Seen)
         {
+            if (seen == null) continue;
             Character chara = seen.GetComponentInChildren<Character>();
             if (chara == null || chara.IsDead) continue;
 

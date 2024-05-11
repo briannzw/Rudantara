@@ -71,6 +71,8 @@ public class EnemyCombatController : MonoBehaviour
                 SkillCooldowns[skill] = 0f;
         }
 
+        resistance = 0;
+        leaveTimer = 0f;
         OnReset?.Invoke();
     }
 
@@ -104,6 +106,10 @@ public class EnemyCombatController : MonoBehaviour
         resistance = StatsConst.HURT_RESISTANCE;
         character.OnCharacterHurt += () =>
         {
+            // Hurting enemy will trigger healthbars.
+            OnCombatEngaged?.Invoke();
+            leaveTimer = 0f;
+
             // Resistance when animating attacks, etc.
             if (!animator.GetBool("canMove")) return;
 
@@ -112,7 +118,6 @@ public class EnemyCombatController : MonoBehaviour
             {
                 animator.SetTrigger("Hurt");
                 resistance = StatsConst.HURT_RESISTANCE;
-                describable.OnEvent?.Invoke("[" + describable.Name + "] died and will be respawned.");
             }
         };
 
@@ -122,6 +127,7 @@ public class EnemyCombatController : MonoBehaviour
             animator.SetBool("Dead", true);
             GetComponent<Collider>().enabled = false;
             controller.enabled = false;
+            describable.OnEvent?.Invoke("[" + describable.Name + "] died and will be respawned.");
             OnReset?.Invoke();
 
             StartCoroutine(AnimateDead());
@@ -198,7 +204,7 @@ public class EnemyCombatController : MonoBehaviour
                 SkillCooldowns[Skills[i]] -= Time.deltaTime;
         }
 
-        if (controller.IsTargetInRange)
+        if (!controller.IsTargetDied())
         {
             skillTimer -= Time.deltaTime;
 
@@ -208,7 +214,10 @@ public class EnemyCombatController : MonoBehaviour
                 skillTimer = StatsConst.SKILL_CHECK_INTERVAL;
                 CastSkill();
             }
-
+        }
+        
+        if (controller.IsTargetInRange)
+        {
             normalTimer -= Time.deltaTime;
             if (normalTimer < 0f)
             {
@@ -217,25 +226,25 @@ public class EnemyCombatController : MonoBehaviour
                     hitController.Name = normalAttackDescribe;
                 }
                 animator.SetTrigger(normalAttackAnimTrigger);
-                // TODO: Distribution
                 normalTimer = StatsConst.N_SPEED_MOD / character.CheckStat(StatEnum.Speed);
             }
 
+            // If target leaves before
             if (leaveTimer > 0f)
                 OnCombatEngaged?.Invoke();
-            
+
             leaveTimer = 0f;
         }
         else
         {
+            Wander();
+
+            leaveTimer += Time.deltaTime;
+
             if (leaveTimer >= resetAfterLeaving)
             {
                 Reset();
             }
-            else
-                leaveTimer += Time.deltaTime;
-
-            Wander();
         }
     }
 
@@ -268,9 +277,7 @@ public class EnemyCombatController : MonoBehaviour
 
     public void Taunted(Transform target)
     {
-        if(target == null) OnTaunted?.Invoke(false);
-
         controller.SetTarget(target);
-        OnTaunted?.Invoke(true);
+        OnTaunted?.Invoke(target != null);
     }
 }
