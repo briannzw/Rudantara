@@ -41,7 +41,7 @@ public class MemoryRetrieval : MonoBehaviour
             debugKey += "\n" + key;
         }
         debugKey += "\n[Score: " + (memory[relevantMemory] + (keyFrequency.ContainsKey(relevantMemory) ? keyFrequency[relevantMemory] : 0)).ToString() + "] " + relevantMemory;
-        Debug.Log(debugKey);
+        //Debug.Log(debugKey);
 #endif
         return relevantMemory;
     }

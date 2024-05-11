@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4335,6 +4335,7 @@ MonoBehaviour:
   LevelManager: {fileID: 1211812478}
   saveManager: {fileID: 1211812479}
   bossHUD: {fileID: 4787851142847289017}
+  memoryPersistence: {fileID: 2041362233}
 --- !u!114 &1211812477
 MonoBehaviour:
   m_ObjectHideFlags: 0

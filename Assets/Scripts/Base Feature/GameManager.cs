@@ -38,10 +38,22 @@ public class GameManager : MonoBehaviour
     public SaveManager saveManager;
     public BossHUD bossHUD;
 
+    [Header("Saves")]
+    [SerializeField] private MemoryPersistence memoryPersistence;
+
     public void NewGame()
     {
         saveManager.SaveData.Iteration = 1;
+        saveManager.SaveData.Memory.Clear();
         // saveManager.SaveData = new();
+        saveManager.Save();
+    }
+
+    public void SaveGame()
+    {
+        memoryPersistence.Save();
+        LevelManager.UpdateSaveData();
+
         saveManager.Save();
     }
 }

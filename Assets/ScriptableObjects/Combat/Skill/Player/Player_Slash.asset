@@ -17,5 +17,5 @@ MonoBehaviour:
   Loop: 0
   ManaRequired: 40
   Cooldown: 12
-  AttackPercent: 250
+  AttackPercent: 200
   VFX: {fileID: 0}

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ public class PersonalityStateController : MonoBehaviour
 
     private void Start()
     {
-        actionModule.CreatePrompt();
+        DungeonGenerator.Instance.OnDungeonComplete += () => actionModule.CreatePrompt();
     }
 
     public void AddEnemy(Character chara)

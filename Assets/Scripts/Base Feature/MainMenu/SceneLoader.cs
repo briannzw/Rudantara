@@ -17,6 +17,6 @@ public class SceneLoader : MonoBehaviour
     private void OnApplicationQuit()
     {
         if (GameManager.Instance != null)
-            GameManager.Instance.saveManager.Save();
+            GameManager.Instance.SaveGame();
     }
 }

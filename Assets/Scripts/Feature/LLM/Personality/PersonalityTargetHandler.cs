@@ -28,6 +28,11 @@ public class PersonalityTargetHandler : MonoBehaviour
         foreach(var target in targets)
         {
             if(target.Key.Contains("Thorntle")) _targets.Add("thorntle");
+            if(target.Key == "Your partner")
+            {
+                _targets.Add("partner");
+                continue;
+            }
             _targets.Add(target.Key.ToLower());
         }
 

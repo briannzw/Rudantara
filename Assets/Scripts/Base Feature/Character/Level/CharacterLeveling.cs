@@ -32,7 +32,8 @@ public class CharacterLeveling : MonoBehaviour
         get 
         {
             float temp = 0;
-            for(int i = 2; i < CurrentLevel; i++) temp += expPerLevel.Evaluate(i);
+            for(int i = 1; i < CurrentLevel; i++)
+                temp += Mathf.FloorToInt(expPerLevel.Evaluate(i + 1));
             temp += Experiences;
             return temp;
         }
@@ -77,16 +78,15 @@ public class CharacterLeveling : MonoBehaviour
         character.ResetDynamicValue();
     }
 
-    public void SetInitialLevel(float exp)
+    public void SetInitialExp(float exp)
     {
+        CurrentLevel = 1;
         Experiences = exp;
-        for(int i = 2; i < 100; i++)
+        while (Experiences >= ExpNeeded)
         {
-            if(Experiences >= ExpNeeded)
-            {
-                Experiences -= ExpNeeded;
-                CurrentLevel++;
-            }
+            Experiences -= ExpNeeded;
+            CurrentLevel++;
+            if (CurrentLevel >= 100) break;
         }
 
         character.Initialize(this);

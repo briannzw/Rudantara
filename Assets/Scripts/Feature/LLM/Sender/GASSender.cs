@@ -34,7 +34,7 @@ public class GASSender : MonoBehaviour
             {
                 response = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.downloadHandler.text);
 
-                Debug.Log("Response: " + response["answer"]);
+                //Debug.Log("Response: " + response["answer"]);
 
                 if (responseText) responseText.text = response["answer"];
 

@@ -29,6 +29,11 @@ public class MemoryPersistence : MonoBehaviour
         actionModule.OnResponseReceived -= Summarize;
     }
 
+    private void Start()
+    {
+        memory = new SerializedDictionary<string, float>(GameManager.Instance.saveManager.SaveData.Memory);
+    }
+
     private void Summarize(ActionResponse response)
     {
         Decay();
@@ -95,5 +100,10 @@ public class MemoryPersistence : MonoBehaviour
             // dateTime to string yyyy-MM-dd HH:mm:ssZ
             Debug.Log(String.Format("{0:u}", mem.Value) + ": " + mem.Key);
         }
+    }
+
+    public void Save()
+    {
+        GameManager.Instance.saveManager.SaveData.Memory = memory;
     }
 }

@@ -85,14 +85,17 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
     public void CreatePrompt()
     {
-        string prevAction = "You are currently " + pastAction;
+        string prevAction = "";
+        
+        if(!string.IsNullOrEmpty(pastAction))
+            prevAction += "You are currently " + pastAction;
 
         if(agentController.DistanceFrom(playerCharacter.transform) != -1)
             prevAction += " and " + Math.Round(agentController.DistanceFrom(playerCharacter.transform), 1) + " meters away from your partner.";
 
         string prevLine = "";
         
-        if(pastLine != "\"\"")
+        if(pastLine != "\"\"" && !string.IsNullOrEmpty(pastLine))
             prevLine += "Previously, you've said " + pastLine + "\n";
         
         // Keywords
@@ -100,6 +103,11 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
         if(!string.IsNullOrEmpty(pastAction))
             keywords.Add(pastAction.ToLower());
+
+        if (personality.IsEnemyDetected)
+            keywords.Add("combat");
+        else
+            keywords.Add("forest");
 
         string prompt = personality.CreatePrompt(keywords, prevAction + "\n" + prevLine) + "\n";
 
@@ -183,7 +191,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // Format
         prompt += "\n" + ReplaceFirst(responseFormat, "null", personality.IsEnemyDetected ? "1" : "0");
 
-        Debug.Log(prompt);
+        //Debug.Log(prompt);
 
         Send(prompt);
         sendTime = DateTime.Now;

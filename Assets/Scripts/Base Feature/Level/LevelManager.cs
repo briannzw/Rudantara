@@ -35,8 +35,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        playerLeveling.SetInitialLevel(saveManager.SaveData.PlayerExp);
-        companionLeveling.SetInitialLevel(saveManager.SaveData.CompanionExp);
+        playerLeveling.SetInitialExp(saveManager.SaveData.PlayerExp);
+        companionLeveling.SetInitialExp(saveManager.SaveData.CompanionExp);
 
         // Check Player and Companion
         playerLeveling.GetComponent<Character>().OnCharacterDie += (Character chara) =>
@@ -96,8 +96,7 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
-        saveManager.SaveData.PlayerExp = playerLeveling.TotalExperiences;
-        saveManager.SaveData.CompanionExp = companionLeveling.TotalExperiences;
+        UpdateSaveData();
         GameManager.Instance.NewGame();
         Time.timeScale = 1f;
         sceneLoader.LoadScene("MainMenu");
@@ -108,10 +107,14 @@ public class LevelManager : MonoBehaviour
         if (CurrentIteration >= enemyBaseLevels.Count) return;
 
         CurrentIteration++;
+
+        GameManager.Instance.SaveGame();
+    }
+
+    public void UpdateSaveData()
+    {
         saveManager.SaveData.Iteration = CurrentIteration;
         saveManager.SaveData.PlayerExp = playerLeveling.TotalExperiences;
         saveManager.SaveData.CompanionExp = companionLeveling.TotalExperiences;
-
-        saveManager.Save();
     }
 }

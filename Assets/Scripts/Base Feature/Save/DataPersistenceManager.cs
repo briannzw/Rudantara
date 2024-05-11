@@ -28,6 +28,7 @@ namespace Save
 
                 // Settings
                 JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.ContractResolver = new DictionaryAsArrayResolver();
 
                 if (isEncrypted)
                 {
@@ -76,6 +77,7 @@ namespace Save
             {
                 // Settings
                 JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.ContractResolver = new DictionaryAsArrayResolver();
 
                 T data;
                 if (isEncrypted)
