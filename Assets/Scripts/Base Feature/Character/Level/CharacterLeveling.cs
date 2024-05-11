@@ -26,7 +26,7 @@ public class CharacterLeveling : MonoBehaviour
 
     public int CurrentLevel { get; private set; }
     public int ExpNeeded => Mathf.FloorToInt(expPerLevel.Evaluate(CurrentLevel + 1));
-    public float Experiences { get => experiences; private set { experiences = value; OnExperienceChanged?.Invoke(); } }
+    public float Experiences { get => Mathf.Clamp(experiences, 0, 999999); private set { experiences = value; OnExperienceChanged?.Invoke(); } }
     public float TotalExperiences
     { 
         get 

@@ -15,8 +15,8 @@ public class ActionResult
     {
         string output = "";
 
-        output += "Was in combat : " + (WasInCombat ? "Yes" : "No") + "\n";
-        output += "Result : \n";
+        output += "Was in combat: " + (WasInCombat ? "Yes" : "No") + "\n";
+        output += "Result: \n";
         output += "Player killed " + PlayerEnemiesKilled + " Enemies\n";
         output += "You killed " + OwnEnemiesKilled + " Enemies\n";
         output += "Player's health " + HealthDelta(PrevPlayerHealth, PlayerChara.CheckStat(DynamicStatEnum.Health), PlayerChara.CheckStatMax(DynamicStatEnum.Health)) + "\n";
@@ -30,8 +30,8 @@ public class ActionResult
         string output = "";
         int delta = Mathf.RoundToInt(previous - current);
 
-        if (delta < 0) output += "hurt by " + Mathf.Abs(delta) + "(" + Mathf.RoundToInt(delta/max * 100f) + "% health)";
-        else if (delta > 0) output += "healed by " + delta + "(" + Mathf.RoundToInt(delta / max * 100f) + "% health)";
+        if (delta < 0) output += "hurt by " + Mathf.Abs(delta) + " (" + Mathf.RoundToInt(delta/max * 100f) + "% health)";
+        else if (delta > 0) output += "healed by " + delta + " (" + Mathf.RoundToInt(delta / max * 100f) + "% health)";
         else output += "unchanged";
 
         return output;

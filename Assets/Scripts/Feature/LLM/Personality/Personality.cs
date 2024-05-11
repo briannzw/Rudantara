@@ -43,7 +43,7 @@ public class Personality : MonoBehaviour
 
         prompt += personalityTraits.Describe() + "\n\n";
 
-        prompt += "Here is summary of your response and its result on your action, please utilize this information when choosing actions.\n";
+        prompt += "Here is summary of your response and its result of your action, please utilize this information when choosing actions.\n";
         if(addPrev != null) prompt += addPrev + "\n\n";
         prompt += "Previous memories:\n";
         prompt += memory.Reflect();

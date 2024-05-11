@@ -900,11 +900,11 @@ MonoBehaviour:
     There''s two type
     of enemies in this forest,
 
-    1. Throntle : Turtle-like enemy with thorns on
-    its shell. It''s a close ranged enemy.
+    1. Throntle : Turtle-like one eyed enemy with
+    thorns on its shell. It''s a close ranged enemy with.
 
-    2. Bull Boss : Bull-like huge enemy
-    boss with powerful attacks and unique Slam attack.'
+    2. Bull Boss : Bull-like
+    huge enemy boss with powerful attacks and unique Slam attack.'
   responseText: {fileID: 0}
 --- !u!4 &374152382
 Transform:
@@ -1892,6 +1892,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1211812478}
+        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+        m_MethodName: NextIteration
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 478496232}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
         m_MethodName: LoadScene
@@ -2825,7 +2837,7 @@ PrefabInstance:
     - target: {fileID: 1907099658630953841, guid: 4a5c37d2857381d468220b71e1679f3b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2101575800953576985, guid: 4a5c37d2857381d468220b71e1679f3b,
         type: 3}
@@ -7081,6 +7093,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 478496232}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Main
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1587088508

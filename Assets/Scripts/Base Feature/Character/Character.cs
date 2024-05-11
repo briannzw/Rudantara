@@ -170,7 +170,7 @@ public class Character : MonoBehaviour
         description += " (" + info + " Health)";
 
         if(charLevel != null)
-            description += $"Level: {charLevel.CurrentLevel}/100\n";
+            description += $"\nLevel: {charLevel.CurrentLevel}/100\n";
 
         return description;
     }

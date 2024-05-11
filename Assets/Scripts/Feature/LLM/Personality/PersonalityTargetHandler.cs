@@ -35,9 +35,9 @@ public class PersonalityTargetHandler : MonoBehaviour
         }
     }
 
-    public string CreatePrompt()
+    public string CreatePrompt(bool update = true)
     {
-        Populate();
+        if(update) Populate();
 
         string prompt = "";
 

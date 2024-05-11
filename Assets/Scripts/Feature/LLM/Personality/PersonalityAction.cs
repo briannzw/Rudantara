@@ -65,7 +65,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     private string pastLine;
     #endregion
 
-    public int RequestSent = 0;
+    public int RequestFailed = 0;
 
     private void Start()
     {
@@ -89,7 +89,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
         string prevLine = "";
         
-        if(pastLine != "")
+        if(pastLine != "\"\"")
             prevLine += "Previously, you've said " + pastLine + "\n";
         
         string prompt = personality.CreatePrompt(prevAction + "\n" + prevLine) + "\n";
@@ -103,7 +103,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // Character Stats
         prompt += character.Describe(true) + "\n" + playerCharacter.Describe() + "\n";
 
-        prompt += "After receiving all of the information above, you need to define your next action by fulfilling all the JSON key and value instructions below.";
+        prompt += "After receiving all of the information above, based on your personality and situation, you need to define your next action by fulfilling all the JSON key and value instructions below.";
 
         // Combat State
         prompt += "\n" + actionStatePrompt + (personality.IsEnemyDetected ? "1" : "0") + "\n";
@@ -127,13 +127,13 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // Alternative
         prompt += "\n" + alternativeActionPrompt + "\n";
 
-        for (int i = 1; i < actions.Count; i++)
+        for (int i = 1; i < stateActions.Count; i++)
         {
             // Indexer
-            prompt += $"{i}. {actions[i]}";
+            prompt += $"{i}. {stateActions[i]}";
 
             // Seperator
-            if (i < actions.Count - 1) prompt += ",\n";
+            if (i < stateActions.Count - 1) prompt += ",\n";
             else prompt += ".\n";
         }
 
@@ -142,7 +142,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
         // Add Self as Skill target
         personalityTargetHandler.AddTarget("Yourself", character);
-        prompt += DescribeTargets();
+        prompt += DescribeTargets(false);
 
         // Suggestion
         //if(suggestion) suggestion.CanInsert = true;
@@ -181,11 +181,11 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
     }
 
     #region Describe Functions
-    private string DescribeTargets()
+    private string DescribeTargets(bool update = true)
     {
         string prompt;
 
-        prompt = personalityTargetHandler.CreatePrompt();
+        prompt = personalityTargetHandler.CreatePrompt(update);
 
         return prompt;
     }
@@ -193,11 +193,16 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
 
     public void Send(string prompt)
     {
+        // If previous prompt failed, create new prompt
+        if(RequestFailed > 1)
+        {
+            CreatePrompt();
+            return;
+        }
+
         prevPrompt = prompt;
         if (requestCoroutine != null) return;
         requestCoroutine = StartCoroutine(sender.CallGoogleAppsScript(this, prompt));
-        RequestSent++;
-        Debug.Log("REQUEST " + RequestSent);
     }
 
     public void Receive(string response)
@@ -208,10 +213,12 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         // If request failed, repeat
         if (response == null)
         {
+            RequestFailed++;
             Send(prevPrompt);
             return;
         }
 
+        RequestFailed = 0;
         StartCoroutine(RePrompt());
 
         var _response = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);

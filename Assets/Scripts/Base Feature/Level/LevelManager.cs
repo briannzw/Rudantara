@@ -96,6 +96,8 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
+        saveManager.SaveData.PlayerExp = playerLeveling.TotalExperiences;
+        saveManager.SaveData.CompanionExp = companionLeveling.TotalExperiences;
         GameManager.Instance.NewGame();
         Time.timeScale = 1f;
         sceneLoader.LoadScene("MainMenu");
@@ -111,6 +113,5 @@ public class LevelManager : MonoBehaviour
         saveManager.SaveData.CompanionExp = companionLeveling.TotalExperiences;
 
         saveManager.Save();
-        sceneLoader.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
