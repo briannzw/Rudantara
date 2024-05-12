@@ -22,6 +22,7 @@ public class CharacterLeveling : MonoBehaviour
     [SerializeField] private CharacterStatLevelPattern statsPattern;
 
     public Action OnExperienceChanged;
+    public Action OnLevelUp;
     public bool ShareEXP = true;
 
     public int CurrentLevel { get; private set; }
@@ -115,6 +116,7 @@ public class CharacterLeveling : MonoBehaviour
             {
                 // Level Up
                 CurrentLevel++;
+                OnLevelUp?.Invoke();
                 Experiences -= ExpNeeded;
 
                 if (levelUpVFX)

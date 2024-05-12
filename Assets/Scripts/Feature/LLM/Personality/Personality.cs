@@ -7,7 +7,7 @@ public class Personality : MonoBehaviour
     private Describable me;
     public string Name => me.Name;
     [SerializeField, TextArea] private string characterDescription;
-    [SerializeField] private BigFivePersonality personalityTraits;
+    public BigFivePersonality Traits;
 
     // Memory
     private MemoryPersistence memory;
@@ -19,6 +19,11 @@ public class Personality : MonoBehaviour
     {
         me = GetComponent<Describable>();
         memory = GetComponentInChildren<MemoryPersistence>();
+    }
+
+    private void Start()
+    {
+        Traits = GameManager.Instance.saveManager.SaveData.CompanionPersonalities;
     }
 
     public void DescribeVisual(string report)
@@ -33,16 +38,21 @@ public class Personality : MonoBehaviour
     public void EnemyRemoved(Character chara) => stateController.RemoveEnemy(chara);
     public bool IsEnemyDetected => stateController.IsEnemyDetected();
 
+    public void ForgetTemp()
+    {
+        memory.ResetTemp();
+    }
+
     public void Forget()
     {
-        memory.Reset();
+        memory.ResetMem();
     }
 
     public string CreatePrompt(HashSet<string> keywords, string addPrev = null)
     {
         string prompt = characterDescription + "\n\n" + "You are an adventurer that have following personality that is based on the Big Five Personality Traits (scales from 0 to 100):\n";
 
-        prompt += personalityTraits.Describe() + "\n\n";
+        prompt += Traits.Describe() + "\n\n";
 
         prompt += "Here is summary of your response and its result of your action, please utilize this information when choosing actions.\n";
         if(addPrev != null) prompt += addPrev + "\n\n";
