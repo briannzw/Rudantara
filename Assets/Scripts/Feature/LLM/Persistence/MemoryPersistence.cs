@@ -88,9 +88,15 @@ public class MemoryPersistence : MonoBehaviour
         return outMemory;
     }
 
-    public void Reset()
+    public void ResetTemp()
     {
         tempMemory.Clear();
+    }
+
+    public void ResetMem()
+    {
+        memory.Clear();
+        Save();
     }
 
     private void Print()

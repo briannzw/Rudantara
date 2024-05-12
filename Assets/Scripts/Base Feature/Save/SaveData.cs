@@ -10,5 +10,6 @@ namespace Save.Data
         public float PlayerExp = 0;
         public float CompanionExp = 0;
         public Dictionary<string, float> Memory = new();
+        public BigFivePersonality CompanionPersonalities = new();
     }
 }

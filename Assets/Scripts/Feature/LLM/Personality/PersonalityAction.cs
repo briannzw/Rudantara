@@ -197,7 +197,7 @@ public class PersonalityAction : MonoBehaviour, IRequestResponse
         sendTime = DateTime.Now;
 
         // Resets
-        personality.Forget();
+        personality.ForgetTemp();
     }
 
     #region Describe Functions
