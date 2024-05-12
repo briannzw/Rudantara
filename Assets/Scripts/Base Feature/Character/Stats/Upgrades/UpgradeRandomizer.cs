@@ -19,9 +19,6 @@ public class UpgradeRandomizer : MonoBehaviour
     public Image[] upgradeImage;
     public Button[] upgradeButtons;
 
-    public CharacterLeveling playerLevel;
-    public int currentPlayerLevel;
-
     private bool seedInitialized = false;     
     private bool upgradeSeedInitialized = false; 
     private bool statSeedInitialized = false; 
@@ -43,16 +40,6 @@ public class UpgradeRandomizer : MonoBehaviour
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager>();
-        currentPlayerLevel = playerLevel.CurrentLevel;
-    }
-
-    void Update()
-    {
-        if (playerLevel.CurrentLevel != currentPlayerLevel)
-        {
-            StartUpgrade();
-            currentPlayerLevel = playerLevel.CurrentLevel;
-        }
     }
 
     private long LCG(long a, long c, long m, long seed)
