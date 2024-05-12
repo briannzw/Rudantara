@@ -7,10 +7,10 @@ public class LevelUpUpgrade : MonoBehaviour
     public UpgradeUIManager upgradeUIManager;
     public CharacterLeveling characterLeveling;
 
-    private void OnEnable()
+    private void Start()
     {
         // Subscribe to the OnLevelUp event when enabled
-    //    characterLeveling.OnLevelUp += PlayerLevelUp;
+        characterLeveling.OnLevelUp += PlayerLevelUp;
     }
 
     void PlayerLevelUp()
